@@ -42,8 +42,7 @@ public:
   unsigned int size();
   const std::map<unsigned int, float> getReadings();
 
-
-
+  friend bool operator==(const Measure& lhs, const Measure& rhs);
 };
 
 #endif // MEASURE_H_

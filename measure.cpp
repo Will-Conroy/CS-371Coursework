@@ -22,6 +22,7 @@
 #include <string>
 
 #include "measure.h"
+#include "bethyw.h"
 
 /*
   TODO: Measure::Measure(codename, label);
@@ -154,8 +155,6 @@ float Measure::getValue(unsigned int key){
 
 
 /*
-  TODO: Measure::setValue(key, value)
-
   Add a particular year's value to the Measure object. If a value already
   exists for the year, replace it.
 
@@ -183,7 +182,6 @@ void Measure::setValue(unsigned int key, float value){
 
 
 /*
-  TODO: Measure::size()
 
   Retrieve the number of years data we have for this measure. This function
   should be callable from a constant context and must promise to not change
@@ -203,7 +201,7 @@ void Measure::setValue(unsigned int key, float value){
 unsigned int Measure::size(){
     return readings.size();
 }
-
+/*TODO: write comments*/
 const std::map<unsigned int, float> Measure::getReadings() {
     return this->readings;
 }
@@ -319,4 +317,14 @@ const std::map<unsigned int, float> Measure::getReadings() {
     true if both Measure objects have the same codename, label and data; false
     otherwise
 */
+
+bool operator==(const Measure& lhs, const Measure& rhs){
+    if(lhs.codename != rhs.codename)
+        return false;
+
+    if(lhs.label != rhs.label)
+        return false;
+
+    return lhs.readings == rhs.readings;
+}
 

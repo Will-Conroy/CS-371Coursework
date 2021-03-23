@@ -14,7 +14,7 @@
   of Measure objects (also in some form of container).
 
   This file contains numerous functions you must implement. Each function you
-  must implement has a TODO block comment. 
+  must implement has a
 */
 
 #include <stdexcept>
@@ -22,8 +22,6 @@
 #include "area.h"
 
 /*
-  TODO: Area::Area(localAuthorityCode)
-
   Construct an Area with a given local authority code.
 
   @param localAuthorityCode
@@ -35,8 +33,6 @@
 Area::Area(const std::string& localAuthorityCode): localAuthorityCode(localAuthorityCode) {}
 
 /*
-  TODO: Area::getLocalAuthorityCode()
-
   Retrieve the local authority code for this Area. This function should be 
   callable from a constant context and not modify the state of the instance.
   
@@ -49,13 +45,11 @@ Area::Area(const std::string& localAuthorityCode): localAuthorityCode(localAutho
     auto authCode = area.getLocalAuthorityCode();
 */
 
-std::string Area::getLocalAuthorityCode() {
+std::string Area::getLocalAuthorityCode() const {
     return this->localAuthorityCode;
 }
 
 /*
-  TODO: Area::getName(lang)
-
   Get a name for the Area in a specific language.  This function should be 
   callable from a constant context and not modify the state of the instance.
 
@@ -77,7 +71,7 @@ std::string Area::getLocalAuthorityCode() {
     ...
     auto name = area.getName(langCode);
 */
- std::string Area::getName(const std::string lang){
+ std::string Area::getName(const std::string lang) const{
     std::string lower = BethYw::convertToLower(lang);
     if(names.find(lang) == names.end())
         throw (std::out_of_range("No known lang"));
@@ -86,8 +80,6 @@ std::string Area::getLocalAuthorityCode() {
 
 
 /*
-  TODO: Area::setName(lang, name)
-
   Set a name for the Area in a specific language.
 
   @param lang
@@ -125,8 +117,6 @@ void Area::setName(std::string lang, std::string name){
 }
 
 /*
-  TODO: Area::getMeasure(key)
-
   Retrieve a Measure object, given its codename. This function should be case
   insensitive when searching for a measure.
 
@@ -149,17 +139,14 @@ void Area::setName(std::string lang, std::string name){
     auto measure2 = area.getMeasure("pop");
 */
 
-Measure Area::getMeasure(std::string key) {
-    auto result = this->measures.find("key");
-    if(result == this->measures.end())
+Measure& Area::getMeasure(const std::string key) {
+    if(measures.find(BethYw::convertToLower(key)) == measures.end())
         throw std::out_of_range("No measure found matching " + key);
-    return result->second;
+    return measures.at(key);
 }
 
 
 /*
-  TODO: Area::setMeasure(codename, measure)
-
   Add a particular Measure to this Area object. Note that the Measure's
   codename should be converted to lowercase.
 
@@ -190,22 +177,21 @@ Measure Area::getMeasure(std::string key) {
     area.setMeasure(codename, measure);
 */
 void Area::setMeasure(std::string codename, Measure measure){
-    if(this->measures.find(codename) == this->measures.end()) {
-        this->measures.insert(std::pair<std::string, Measure>(codename, measure));
+    std::string codenameLower = BethYw::convertToLower(codename);
+    if(this->measures.find(codenameLower) == this->measures.end()) {
+        this->measures.insert(std::pair<std::string, Measure>(codenameLower, measure));
     }else{
         for(auto& value : measure.getReadings()){
             try{
-                this->measures[codename].setValue(value.first, value.second);
+                this->measures[codenameLower].setValue(value.first, value.second);
             }catch(const std::out_of_range& e){
-                this->measures[codename].setValue(value.first,value.second);
+                this->measures[codenameLower].setValue(value.first,value.second);
             }
         }
     }
 }
 
 /*
-  TODO: Area::size()
-
   Retrieve the number of Measures we have for this Area. This function should be 
   callable from a constant context, not modify the state of the instance, and
   must promise not throw an exception.
@@ -287,4 +273,13 @@ unsigned int Area::size(){
 
     bool eq = area1 == area2;
 */
+bool operator==(const Area& lhs, const Area& rhs){
+    if(lhs.getLocalAuthorityCode() != rhs.getLocalAuthorityCode())
+        return false;
+
+    if(lhs.names != rhs.names)
+        return false;
+
+    return lhs.measures == rhs.measures;
+}
 

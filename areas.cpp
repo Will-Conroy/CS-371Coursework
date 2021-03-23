@@ -37,7 +37,6 @@
 using json = nlohmann::json;
 
 /*
-  TODO: Areas::Areas()
 
   Constructor for an Areas object.
 
@@ -49,8 +48,6 @@ Areas::Areas() {
 }
 
 /*
-  TODO: Areas::setArea(localAuthorityCode, area)
-
   Add a particular Area to the Areas object.
 
   If an Area already exists with the same local authority code, overwrite all
@@ -87,8 +84,6 @@ void Areas::setArea(std::string localAuthorityCode, Area area) {
 
 
 /*
-  TODO: Areas::getArea(localAuthorityCode)
-
   Retrieve an Area instance with a given local authority code.
 
   @param localAuthorityCode
@@ -119,8 +114,6 @@ Area Areas::getArea(std::string localAuthorityCode){
 
 
 /*
-  TODO: Areas::size()
-
   Retrieve the number of Areas within the container. This function should be 
   callable from a constant context, not modify the state of the instance, and
   must promise not throw an exception.
@@ -141,8 +134,6 @@ unsigned int Areas::size() {
 }
 
 /*
-  TODO: Areas::populateFromAuthorityCodeCSV(is, cols, areasFilter)
-
   This function specifically parses the compiled areas.csv file of local 
   authority codes, and their names in English and Welsh.
 
@@ -426,7 +417,6 @@ void Areas::populateFromAuthorityByYearCSV(std::istream &is,
 }
 
 /*
-  TODO: Areas::populate(is, type, cols)
 
   Parse data from an standard input stream `is`, that has data of a particular
   `type`, and with a given column mapping in `cols`.

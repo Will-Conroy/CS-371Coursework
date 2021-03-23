@@ -40,12 +40,16 @@ private:
 public:
     Area() = default;
     Area(const std::string& localAuthorityCode);
-    std::string getLocalAuthorityCode();
-    std::string getName(const std::string lang);
+    std::string getLocalAuthorityCode() const;
+    std::string getName(const std::string lang) const;
     void setName(std::string lang, std::string name);
-    Measure getMeasure(std::string key);
+    Measure& getMeasure(const std::string key);
+
     void setMeasure(std::string codename, Measure measure);
     unsigned int size();
+
+    friend bool operator==(const Area& lhs, const Area& rhs);
+
 
 };
 
