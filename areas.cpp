@@ -420,6 +420,7 @@ throw std::runtime_error("Not impeneted");
 void Areas::populateFromAuthorityByYearCSV(std::istream &is,
                                        const BethYw::SourceColumnMapping &cols,
                                        const StringFilterSet * const areasFilter,
+                                       const StringFilterSet * const measuresFilter,
                                        const YearFilterTuple * const yearsFilter){
     throw std::runtime_error("Not impeneted");
 }
@@ -584,7 +585,7 @@ void Areas::populate(
   if (type == BethYw::AuthorityCodeCSV && !(cols.size() < 3)) {
       populateFromAuthorityCodeCSV(is, cols, areasFilter);
   } else if(type == BethYw::AuthorityByYearCSV && !(cols.size() < 3)){
-      populateFromAuthorityByYearCSV(is, cols, areasFilter, yearsFilter);
+      populateFromAuthorityByYearCSV(is, cols, areasFilter, measuresFilter, yearsFilter);
   } else if(type == BethYw::WelshStatsJSON && !(cols.size() < 6 )) {
       populateFromWelshStatsJSON(is, cols, areasFilter, measuresFilter, yearsFilter);
   }else{

@@ -110,6 +110,7 @@ public:
     void populateFromAuthorityByYearCSV(std::istream &is,
                                                const BethYw::SourceColumnMapping &cols,
                                                const StringFilterSet * const areasFilter,
+                                               const StringFilterSet * const measuresFilter,
                                                const YearFilterTuple * const yearsFilter) noexcept(false);
   std::string toJSON() const;
 
