@@ -40,8 +40,7 @@ public:
   float getValue(unsigned int key);
   void setValue(unsigned int key, float value);
   unsigned int size();
-  const std::map<unsigned int, float> getReadings();
-
+  void merge(Measure measureNew);
   friend bool operator==(const Measure& lhs, const Measure& rhs);
 };
 

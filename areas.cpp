@@ -75,9 +75,11 @@ void Areas::setArea(std::string localAuthorityCode, Area area) {
 
     if(areas.find(localAuthorityCode) == areas.end()){
         areas.insert(std::pair<std::string, Area>(localAuthorityCode, area));
+
     }else{
         area.merge(areas.at(localAuthorityCode));
         areas.at(localAuthorityCode) = area;
+
     }
 }
 
@@ -105,7 +107,7 @@ void Areas::setArea(std::string localAuthorityCode, Area area) {
 Area& Areas::getArea(std::string localAuthorityCode){
 
     if(areas.find(localAuthorityCode) == areas.end())
-        throw std::out_of_range("Unknown local authority code");
+        throw std::out_of_range("No area found matching " + localAuthorityCode);
 
     return areas.at(localAuthorityCode);
 }
@@ -337,7 +339,7 @@ void Areas::populateFromWelshStatsJSON(std::istream &is,
             const StringFilterSet * const areasFilter,
             const StringFilterSet * const measuresFilter,
             const YearFilterTuple * const yearsFilter){
-throw std::runtime_error("Not impeneted");
+throw std::runtime_error("Some little cunt call Will didn't implement Areas::populateFromWelshStatsJSON");
 
 }
 
@@ -411,7 +413,7 @@ void Areas::populateFromAuthorityByYearCSV(std::istream &is,
                                        const StringFilterSet * const areasFilter,
                                        const StringFilterSet * const measuresFilter,
                                        const YearFilterTuple * const yearsFilter){
-    throw std::runtime_error("Not impeneted");
+    throw std::runtime_error("Some little cunt call Will didn't implement Areas::populateFromAuthorityByYearCSV");
 }
 
 /*

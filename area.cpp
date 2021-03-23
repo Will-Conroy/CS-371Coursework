@@ -181,13 +181,8 @@ void Area::setMeasure(std::string codename, Measure measure){
     if(this->measures.find(codenameLower) == this->measures.end()) {
         this->measures.insert(std::pair<std::string, Measure>(codenameLower, measure));
     }else{
-        for(auto& value : measure.getReadings()){
-            try{
-                this->measures[codenameLower].setValue(value.first, value.second);
-            }catch(const std::out_of_range& e){
-                this->measures[codenameLower].setValue(value.first,value.second);
-            }
-        }
+        measure.merge(measures.at(codenameLower));
+        measures.at(codenameLower) = measure;
     }
 }
 

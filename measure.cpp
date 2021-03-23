@@ -201,11 +201,6 @@ void Measure::setValue(unsigned int key, float value){
 unsigned int Measure::size(){
     return readings.size();
 }
-/*TODO: write comments*/
-const std::map<unsigned int, float> Measure::getReadings() {
-    return this->readings;
-}
-
 
 /*
   TODO: Measure::getDifference()
@@ -326,5 +321,11 @@ bool operator==(const Measure& lhs, const Measure& rhs){
         return false;
 
     return lhs.readings == rhs.readings;
+}
+
+void Measure::merge(Measure measureNew){
+    readings.insert(measureNew.readings.begin(), measureNew.readings.end());
+
+
 }
 
