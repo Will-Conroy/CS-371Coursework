@@ -43,7 +43,12 @@
     Measure measure(codename, label);
 */
 Measure::Measure(std::string codename, const std::string &label) {
-  throw std::logic_error("Measure::Measure() has not been implemented!");
+    std::string temp;
+    for(char& c : codename) {
+       temp += std::tolower(c);
+    }
+    this->codename = codename;
+    this->label = label;
 }
 
 /*
@@ -65,6 +70,9 @@ Measure::Measure(std::string codename, const std::string &label) {
     ...
     auto codename2 = measure.getCodename();
 */
+const std::string Measure::getCodename(){
+    return this->codename;
+}
 
 
 /*

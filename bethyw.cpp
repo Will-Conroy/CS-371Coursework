@@ -250,6 +250,7 @@ std::unordered_set<std::string> BethYw::parseAreasArg(
               areas.insert(areaArgs[i]);
           }else{
               areas.clear();
+              return areas;
           }
       }
   }
@@ -257,8 +258,6 @@ std::unordered_set<std::string> BethYw::parseAreasArg(
 }
 
 /*
-  TODO: BethYw::parseMeasuresArg(args)
-
   Parse the measures command line argument, which is optional. If it doesn't 
   exist or exists and contains "all" as value (any case), all measures should
   be imported.
@@ -299,7 +298,7 @@ std::unordered_set<std::string> BethYw::parseMeasuresArg(cxxopts::ParseResult& a
 }
 
 /*
-  TODO: Split this into other function
+ * TODO: ADD comments
   Parse the years command line argument. Years is either a four digit year 
   value, or two four digit year values separated by a hyphen (i.e. either 
   YYYY or YYYY-ZZZZ).
@@ -342,8 +341,7 @@ std::tuple<unsigned int, unsigned int> BethYw::parseYearsArg(cxxopts::ParseResul
 }
 
 /*
-  TODO: BethYw::loadAreas(areas, dir, areasFilter)
-
+ * TODO: ADD comments
   Load the areas.csv file from the directory `dir`. Parse the file and
   create the appropriate Area objects inside the Areas object passed to
   the function in the `areas` argument.
@@ -376,6 +374,14 @@ std::tuple<unsigned int, unsigned int> BethYw::parseYearsArg(cxxopts::ParseResul
 
     BethYw::loadAreas(areas, "data", BethYw::parseAreasArg(args));
 */
+void BethYw::loadAreas(Areas areas, std::string dir, const StringFilterSet * const areasFilter){
+    InputFile areasFile(dir + InputFiles::AREAS.FILE);
+
+    auto fileNameCSV = InputFiles::AREAS.FILE;
+    auto cols = InputFiles::AREAS.COLS;
+    areas.populate(areasFile.open(), AuthorityCodeCSV, cols, areasFilter);
+
+};
 
 
 
@@ -434,7 +440,7 @@ std::tuple<unsigned int, unsigned int> BethYw::parseYearsArg(cxxopts::ParseResul
       BethYw::parseMeasuresArg(args),
       BethYw::parseYearsArg(args));
 */
-
+/*TODO: ADD comments*/
 bool BethYw::insensitiveEquals(std::string a, std::string b){
     std::string aUpper = "";
     for(unsigned int i = 0; i < a.size(); i++){
@@ -446,7 +452,7 @@ bool BethYw::insensitiveEquals(std::string a, std::string b){
     }
     return aUpper == bUpper;
 }
-
+/*TODO: ADD comments*/
 unsigned int BethYw::validateYear(std::string yearSting){
     if(yearSting == "0"){
         return 0;
@@ -465,6 +471,8 @@ unsigned int BethYw::validateYear(std::string yearSting){
     }
     throw (std::invalid_argument("Invalid input for years argument"));
 }
+
+
 
 
 

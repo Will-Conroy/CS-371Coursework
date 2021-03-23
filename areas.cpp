@@ -45,7 +45,7 @@ using json = nlohmann::json;
     Areas data = Areas();
 */
 Areas::Areas() {
-  throw std::logic_error("Areas::Areas() has not been implemented!");
+    //this->areas = std::unordered_set<Area> areas();
 }
 
 /*
@@ -74,6 +74,17 @@ Areas::Areas() {
     data.setArea(localAuthorityCode, area);
 */
 
+void Areas::setArea(std::string localAuthorityCode, Area area) {
+
+    Area newArea = area;
+
+    if(areas.find(localAuthorityCode) != areas.end()){
+        auto temp = areas.find(localAuthorityCode);
+        newArea = combinedAreas(temp->second,area);
+    }
+    areas.insert(std::pair<std::string, Area>(localAuthorityCode,newArea));
+}
+
 
 /*
   TODO: Areas::getArea(localAuthorityCode)
@@ -98,6 +109,13 @@ Areas::Areas() {
     ...
     Area area2 = areas.getArea("W06000023");
 */
+Area Areas::getArea(std::string localAuthorityCode){
+
+    if(areas.find(localAuthorityCode) != areas.end() ){
+        throw std::out_of_range("Unknown local authority code");
+    }
+    return areas[localAuthorityCode];
+}
 
 
 /*
@@ -118,7 +136,9 @@ Areas::Areas() {
     
     auto size = areas.size(); // returns 1
 */
-
+unsigned int Areas::size() {
+    return this->areas.size();
+}
 
 /*
   TODO: Areas::populateFromAuthorityCodeCSV(is, cols, areasFilter)
@@ -169,14 +189,55 @@ Areas::Areas() {
 
   @throws 
     std::runtime_error if a parsing error occurs (e.g. due to a malformed file)
-    std::out_of_range if there are not enough columns in cols
+    std::std::out_of_range if there are not enough columns in cols if there are not enough columns in cols
 */
 void Areas::populateFromAuthorityCodeCSV(
     std::istream &is,
     const BethYw::SourceColumnMapping &cols,
     const StringFilterSet * const areasFilter) {
-  throw std::logic_error(
-    "Areas::populateFromAuthorityCodeCSV() has not been implemented!");
+    //TODO: add more error handling if you get time
+    if(cols.size() < 3){
+        throw std::out_of_range("Not enough columns");
+
+    }
+
+    if(!(is.good())){
+        throw (std::runtime_error("Failed to open file"));
+    }
+
+
+    //is.open();
+
+
+    std::string line;
+    //reading first line which is just name of comlumes
+    std::getline(is,line);
+    //TODO: change so that it get all verable in tuple then checks them
+    if(areasFilter == nullptr){
+        //creates all areas
+        while (std::getline(is, line)) {
+            std::string code = getVerableCSV(line);
+            std::string engName = getVerableCSV(line);
+            std::string cymName = getVerableCSV(line);
+
+            Area temp(code);
+            temp.setName("eng",engName);
+            temp.setName("cym",cymName);
+            this->setArea(code, temp);
+        }
+    }else{
+        while (std::getline(is, line)) {
+            std::string code = getVerableCSV(line);
+            if(areasFilter->find(code) != areasFilter->end()){
+                std::string engName = getVerableCSV(line);
+                std::string cymName = getVerableCSV(line);
+                Area temp(code);
+                temp.setName("eng",engName);
+                temp.setName("cym",cymName);
+                this->setArea(code, temp);
+            }
+        }
+    }
 }
 
 /*
@@ -283,7 +344,14 @@ void Areas::populateFromAuthorityCodeCSV(
       &measuresFilter,
       &yearsFilter);
 */
+void Areas::populateFromWelshStatsJSON(std::istream &is,
+            const BethYw::SourceColumnMapping &cols,
+            const StringFilterSet * const areasFilter,
+            const StringFilterSet * const measuresFilter,
+            const YearFilterTuple * const yearsFilter){
+throw std::runtime_error("Not impeneted");
 
+}
 
 /*
   TODO: Areas::populateFromAuthorityByYearCSV(is,
@@ -350,7 +418,12 @@ void Areas::populateFromAuthorityCodeCSV(
     std::runtime_error if a parsing error occurs (e.g. due to a malformed file)
     std::out_of_range if there are not enough columns in cols
 */
-
+void Areas::populateFromAuthorityByYearCSV(std::istream &is,
+                                       const BethYw::SourceColumnMapping &cols,
+                                       const StringFilterSet * const areasFilter,
+                                       const YearFilterTuple * const yearsFilter){
+    throw std::runtime_error("Not impeneted");
+}
 
 /*
   TODO: Areas::populate(is, type, cols)
@@ -407,7 +480,11 @@ void Areas::populateFromAuthorityCodeCSV(
 void Areas::populate(std::istream &is,
                      const BethYw::SourceDataType &type,
                      const BethYw::SourceColumnMapping &cols) {
+
   if (type == BethYw::AuthorityCodeCSV) {
+      if(cols.size() < 3){
+          throw std::out_of_range("Cols is out of range");
+      }
     populateFromAuthorityCodeCSV(is, cols);
   } else {
     throw std::runtime_error("Areas::populate: Unexpected data type");
@@ -504,9 +581,14 @@ void Areas::populate(
     const StringFilterSet * const measuresFilter,
     const YearFilterTuple * const yearsFilter)
      {
-  if (type == BethYw::AuthorityCodeCSV) {
-    populateFromAuthorityCodeCSV(is, cols, areasFilter);
-  } else {
+
+  if (type == BethYw::AuthorityCodeCSV && !(cols.size() < 3)) {
+      populateFromAuthorityCodeCSV(is, cols, areasFilter);
+  } else if(type == BethYw::AuthorityByYearCSV && !(cols.size() < 3)){
+      populateFromAuthorityByYearCSV(is, cols, areasFilter, yearsFilter);
+  } else if(type == BethYw::WelshStatsJSON && !(cols.size() < 6 )) {
+      populateFromWelshStatsJSON(is, cols, areasFilter, measuresFilter, yearsFilter);
+  }else{
     throw std::runtime_error("Areas::populate: Unexpected data type");
   }
 }
@@ -696,5 +778,21 @@ std::string Areas::toJSON() const {
     Areas areas();
     std::cout << areas << std::end;
 */
+
+/*
+ * TODO: Implement me*/
+Area Areas::combinedAreas(Area original, Area newArea){
+    return original;
+}
+
+std::string Areas::getVerableCSV(std::string line){
+    if(line.find(",") == std::string::npos){
+        return line;
+    }
+    std::size_t pos = line.find(",");
+    std::string out = line.substr(0,pos);
+    line.erase (0,pos+1);
+    return out;
+}
 
 

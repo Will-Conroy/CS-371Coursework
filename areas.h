@@ -29,8 +29,7 @@
 #include <iostream>
 #include <string>
 #include <tuple>
-#include <unordered_set>
-
+#include <map>
 #include "datasets.h"
 #include "area.h"
 
@@ -51,8 +50,8 @@ using YearFilterTuple = std::tuple<unsigned int, unsigned int>;
   TODO: you should remove the declaration of the Null class below, and set
   AreasContainer to a valid Standard Library container of your choosing.
 */
-class Null { };
-using AreasContainer = Null;
+
+using AreasContainer = std::map<std::string, Area>;
 
 /*
   Areas is a class that stores all the data categorised by area. The 
@@ -69,8 +68,18 @@ using AreasContainer = Null;
   to overload.
 */
 class Areas {
+private:
+    AreasContainer areas;
+    Area combinedAreas(Area original, Area newArea);
+    std::string getVerableCSV(std::string line);
+
 public:
   Areas();
+
+  void setArea(std::string localAuthorityCode, Area area);
+  Area getArea(std::string localAuthorityCode);
+  unsigned int size();
+
   
   void populateFromAuthorityCodeCSV(
       std::istream& is,
@@ -92,7 +101,18 @@ public:
       const YearFilterTuple * const yearsFilter = nullptr)
       noexcept(false);
 
+    void populateFromWelshStatsJSON(std::istream &is,
+                                           const BethYw::SourceColumnMapping &cols,
+                                           const StringFilterSet * const areasFilter,
+                                           const StringFilterSet * const measuresFilter,
+                                           const YearFilterTuple * const yearsFilter) noexcept(false);
+
+    void populateFromAuthorityByYearCSV(std::istream &is,
+                                               const BethYw::SourceColumnMapping &cols,
+                                               const StringFilterSet * const areasFilter,
+                                               const YearFilterTuple * const yearsFilter) noexcept(false);
   std::string toJSON() const;
+
 };
 
 #endif // AREAS_H

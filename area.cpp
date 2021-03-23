@@ -32,9 +32,7 @@
   @example
     Area("W06000023");
 */
-Area::Area(const std::string& localAuthorityCode) {
-  throw std::logic_error("Area::Area() has not been implemented!");
-}
+Area::Area(const std::string& localAuthorityCode): localAuthorityCode(localAuthorityCode) {}
 
 /*
   TODO: Area::getLocalAuthorityCode()
@@ -51,6 +49,9 @@ Area::Area(const std::string& localAuthorityCode) {
     auto authCode = area.getLocalAuthorityCode();
 */
 
+std::string Area::getLocalAuthorityCode() {
+    return this->localAuthorityCode;
+}
 
 /*
   TODO: Area::getName(lang)
@@ -76,6 +77,11 @@ Area::Area(const std::string& localAuthorityCode) {
     ...
     auto name = area.getName(langCode);
 */
+std::string Area::getName(std::string lang) {
+
+    return this->names[lang];
+    throw (std::out_of_range("No known lang"));
+}
 
 
 /*
@@ -103,7 +109,19 @@ Area::Area(const std::string& localAuthorityCode) {
     std::string langValueWelsh = "Powys";
     area.setName(langCodeWelsh, langValueWelsh);
 */
+void Area::setName(std::string lang, std::string name){
+    if(lang.size() != 3){
+        throw std::invalid_argument("Invalid lang argument");
+    }
+    for(char& c : lang) {
+        if(!isalpha(c)){
+            throw std::invalid_argument("Invalid lang argument: ");
+        }
+    }
+    this->names.insert( std::pair<std::string, std::string>(lang,name));
 
+
+}
 
 /*
   TODO: Area::getMeasure(key)

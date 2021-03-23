@@ -1,6 +1,5 @@
 
 
-
 /*
   +---------------------------------------+
   | BETH YW? WELSH GOVERNMENT DATA PARSER |
@@ -20,7 +19,7 @@
 #include "input.h"
 
 /*
-  TODO: InputSource::InputSource(source)
+
 
   Constructor for an InputSource.
 
@@ -30,7 +29,7 @@
 InputSource::InputSource(const std::string& source): source(source){};
 
 /*
-  TODO: InputSource::getSource()
+
 
   This function should be callable from a constant context.
 
@@ -42,7 +41,7 @@ std::string InputSource::getSource(){
 }
 
 /*
-  TODO: InputFile:InputFile(path)
+
 
   Constructor for a file-based source.
 
@@ -55,7 +54,6 @@ std::string InputSource::getSource(){
 InputFile::InputFile(const std::string& filePath) : InputSource(filePath){};
 
 /*
-  TODO: InputFile::open()
 
   Open a file stream to the file path retrievable from getSource()
   and return a reference to the stream.

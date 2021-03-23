@@ -17,7 +17,8 @@
  */
 
 #include <string>
-
+#include <map>
+#include <iostream>
 #include "measure.h"
 
 /*
@@ -26,11 +27,21 @@
   Measures objects.
 
   TODO: Based on your implementation, there may be additional constructors
+  TODo: change to maps
   or functions you implement here, and perhaps additional operators you may wish
   to overload.
 */
 class Area {
-  Area(const std::string& localAuthorityCode);
+private:
+    std::string localAuthorityCode;
+    std::map<std::string, std::string> names;
+
+public:
+    Area() = default;
+    Area(const std::string& localAuthorityCode);
+    std::string getLocalAuthorityCode();
+    std::string getName(std::string lang);
+    void setName(std::string lang, std::string name);
 };
 
 #endif // AREA_H_

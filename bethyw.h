@@ -22,6 +22,7 @@
 #include "lib_cxxopts.hpp"
 
 #include "datasets.h"
+#include "Areas.h"
 
 const char DIR_SEP =
 #ifdef _WIN32
@@ -63,6 +64,8 @@ std::unordered_set<std::string> parseAreasArg(cxxopts::ParseResult& args);
 std::unordered_set<std::string> parseMeasuresArg(cxxopts::ParseResult& args);
 
 std::tuple<unsigned int, unsigned int> parseYearsArg(cxxopts::ParseResult& args);
+
+void loadAreas(Areas areas, std::string dir, const StringFilterSet * const areasFilter);
 
 unsigned int validateYear(std::string yearSting);
 
