@@ -18,7 +18,7 @@
 */
 
 #include <stdexcept>
-
+#include "bethyw.h"
 #include "area.h"
 
 /*
@@ -60,7 +60,7 @@ std::string Area::getLocalAuthorityCode() {
   callable from a constant context and not modify the state of the instance.
 
   @param lang
-    A three-leter language code in ISO 639-3 format, e.g. cym or eng
+    A three-letter language code in ISO 639-3 format, e.g. cym or eng
 
   @return
     The name for the area in the given language
@@ -77,10 +77,11 @@ std::string Area::getLocalAuthorityCode() {
     ...
     auto name = area.getName(langCode);
 */
-std::string Area::getName(std::string lang) {
-
-    return this->names[lang];
-    throw (std::out_of_range("No known lang"));
+ std::string Area::getName(const std::string lang){
+    std::string lower = BethYw::convertToLower(lang);
+    if(names.find(lang) == names.end())
+        throw (std::out_of_range("No known lang"));
+    return names.find(lang)->second;
 }
 
 
@@ -111,14 +112,14 @@ std::string Area::getName(std::string lang) {
 */
 void Area::setName(std::string lang, std::string name){
     if(lang.size() != 3){
-        throw std::invalid_argument("Invalid lang argument");
+        throw std::invalid_argument("Area::setName: Language code must be three alphabetical letters only");
     }
     for(char& c : lang) {
         if(!isalpha(c)){
-            throw std::invalid_argument("Invalid lang argument: ");
+            throw std::invalid_argument("Area::setName: Language code must be three alphabetical letters only");
         }
     }
-    this->names.insert( std::pair<std::string, std::string>(lang,name));
+    this->names.insert( std::pair<std::string, std::string>(BethYw::convertToLower(lang),name));
 
 
 }
@@ -147,6 +148,13 @@ void Area::setName(std::string lang, std::string name){
     ...
     auto measure2 = area.getMeasure("pop");
 */
+
+Measure Area::getMeasure(std::string key) {
+    auto result = this->measures.find("key");
+    if(result == this->measures.end())
+        throw std::out_of_range("No measure found matching " + key);
+    return result->second;
+}
 
 
 /*
@@ -181,7 +189,19 @@ void Area::setName(std::string lang, std::string name){
 
     area.setMeasure(codename, measure);
 */
-
+void Area::setMeasure(std::string codename, Measure measure){
+    if(this->measures.find(codename) == this->measures.end()) {
+        this->measures.insert(std::pair<std::string, Measure>(codename, measure));
+    }else{
+        for(auto& value : measure.getReadings()){
+            try{
+                this->measures[codename].setValue(value.first, value.second);
+            }catch(const std::out_of_range& e){
+                this->measures[codename].setValue(value.first,value.second);
+            }
+        }
+    }
+}
 
 /*
   TODO: Area::size()
@@ -206,6 +226,9 @@ void Area::setName(std::string lang, std::string name){
     area.setMeasure(code, measure);
     auto size = area.size();
 */
+unsigned int Area::size(){
+    return this->measures.size();
+}
 
 
 /*
@@ -264,3 +287,4 @@ void Area::setName(std::string lang, std::string name){
 
     bool eq = area1 == area2;
 */
+

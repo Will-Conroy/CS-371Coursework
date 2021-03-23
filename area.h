@@ -35,13 +35,18 @@ class Area {
 private:
     std::string localAuthorityCode;
     std::map<std::string, std::string> names;
+    std::map<std::string, Measure> measures;
 
 public:
     Area() = default;
     Area(const std::string& localAuthorityCode);
     std::string getLocalAuthorityCode();
-    std::string getName(std::string lang);
+    std::string getName(const std::string lang);
     void setName(std::string lang, std::string name);
+    Measure getMeasure(std::string key);
+    void setMeasure(std::string codename, Measure measure);
+    unsigned int size();
+
 };
 
 #endif // AREA_H_

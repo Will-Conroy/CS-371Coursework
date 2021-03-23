@@ -70,6 +70,8 @@ void loadAreas(Areas areas, std::string dir, const StringFilterSet * const areas
 unsigned int validateYear(std::string yearSting);
 
 bool insensitiveEquals(std::string a, std::string b);
+
+std::string convertToLower(const std::string string);
 } // namespace BethYw
 
 #endif // BETHYW_H_

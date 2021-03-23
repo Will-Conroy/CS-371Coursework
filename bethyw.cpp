@@ -442,16 +442,9 @@ void BethYw::loadAreas(Areas areas, std::string dir, const StringFilterSet * con
 */
 /*TODO: ADD comments*/
 bool BethYw::insensitiveEquals(std::string a, std::string b){
-    std::string aUpper = "";
-    for(unsigned int i = 0; i < a.size(); i++){
-        aUpper += std::toupper(a[i]);
-    }
-    std::string bUpper = "";
-    for(unsigned int i = 0; i < a.size(); i++){
-        bUpper += std::toupper(b[i]);
-    }
-    return aUpper == bUpper;
+    return convertToLower(a) == convertToLower(b);
 }
+
 /*TODO: ADD comments*/
 unsigned int BethYw::validateYear(std::string yearSting){
     if(yearSting == "0"){
@@ -470,6 +463,14 @@ unsigned int BethYw::validateYear(std::string yearSting){
         return year;
     }
     throw (std::invalid_argument("Invalid input for years argument"));
+}
+
+std::string BethYw::convertToLower(const std::string string) {
+    std::string lower = "";
+    for (unsigned i = 0; i < string.size(); i++) {
+        lower += std::tolower(string[i]);
+    }
+    return lower;
 }
 
 

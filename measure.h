@@ -15,6 +15,7 @@
  */
 
 #include <string>
+#include <map>
 
 /*
   The Measure class contains a measure code, label, and a container for readings
@@ -28,9 +29,20 @@ class Measure {
 private:
     std::string codename;
     std::string label;
+    std::map<unsigned int, float> readings;
+
 public:
+  Measure() = default;
   Measure(std::string code, const std::string &label);
   const std::string getCodename();
+  std::string getLabel();
+  void setLabel(std::string label);
+  float getValue(unsigned int key);
+  void setValue(unsigned int key, float value);
+  unsigned int size();
+  const std::map<unsigned int, float> getReadings();
+
+
 
 };
 

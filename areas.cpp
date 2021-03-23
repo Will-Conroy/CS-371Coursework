@@ -219,7 +219,6 @@ void Areas::populateFromAuthorityCodeCSV(
             std::string code = getVerableCSV(line);
             std::string engName = getVerableCSV(line);
             std::string cymName = getVerableCSV(line);
-
             Area temp(code);
             temp.setName("eng",engName);
             temp.setName("cym",cymName);

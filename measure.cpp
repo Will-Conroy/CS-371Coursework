@@ -95,6 +95,10 @@ const std::string Measure::getCodename(){
     auto label = measure.getLabel();
 */
 
+std::string Measure::getLabel() {
+    return this->label;
+}
+
 
 /*
   TODO: Measure::setLabel(label)
@@ -110,6 +114,9 @@ const std::string Measure::getCodename(){
     ...
     measure.setLabel("New Population");
 */
+void Measure::setLabel(std::string label) {
+    this->label = label;
+}
 
 
 /*
@@ -139,6 +146,11 @@ const std::string Measure::getCodename(){
     ...
     auto value = measure.getValue(1999); // returns 12345678.9
 */
+float Measure::getValue(unsigned int key){
+    if(this->readings.find(key) == this->readings.end())
+        throw std::out_of_range("Unknown year");
+    return this->readings.find(key)->second;
+}
 
 
 /*
@@ -163,6 +175,11 @@ const std::string Measure::getCodename(){
 
     measure.setValue(1999, 12345678.9);
 */
+void Measure::setValue(unsigned int key, float value){
+    if(this->readings.find(key) != this->readings.end())
+        this->readings.find(key)->second = value;
+    this->readings.insert(std::pair<unsigned int, float>(key,value));
+}
 
 
 /*
@@ -183,6 +200,13 @@ const std::string Measure::getCodename(){
     measure.setValue(1999, 12345678.9);
     auto size = measure.size(); // returns 1
 */
+unsigned int Measure::size(){
+    return readings.size();
+}
+
+const std::map<unsigned int, float> Measure::getReadings() {
+    return this->readings;
+}
 
 
 /*
