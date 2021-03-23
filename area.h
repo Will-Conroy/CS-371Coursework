@@ -49,6 +49,7 @@ public:
     unsigned int size();
 
     friend bool operator==(const Area& lhs, const Area& rhs);
+    void merge(Area areaNew);
 
 
 };

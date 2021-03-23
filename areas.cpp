@@ -73,15 +73,13 @@ Areas::Areas() {
 
 void Areas::setArea(std::string localAuthorityCode, Area area) {
 
-    Area newArea = area;
-
-    if(areas.find(localAuthorityCode) != areas.end()){
-        auto temp = areas.find(localAuthorityCode);
-        newArea = combinedAreas(temp->second,area);
+    if(areas.find(localAuthorityCode) == areas.end()){
+        areas.insert(std::pair<std::string, Area>(localAuthorityCode, area));
+    }else{
+        area.merge(areas.at(localAuthorityCode));
+        areas.at(localAuthorityCode) = area;
     }
-    areas.insert(std::pair<std::string, Area>(localAuthorityCode,newArea));
 }
-
 
 /*
   Retrieve an Area instance with a given local authority code.
@@ -104,12 +102,12 @@ void Areas::setArea(std::string localAuthorityCode, Area area) {
     ...
     Area area2 = areas.getArea("W06000023");
 */
-Area Areas::getArea(std::string localAuthorityCode){
+Area& Areas::getArea(std::string localAuthorityCode){
 
-    if(areas.find(localAuthorityCode) != areas.end() ){
+    if(areas.find(localAuthorityCode) == areas.end())
         throw std::out_of_range("Unknown local authority code");
-    }
-    return areas[localAuthorityCode];
+
+    return areas.at(localAuthorityCode);
 }
 
 

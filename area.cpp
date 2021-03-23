@@ -251,7 +251,6 @@ unsigned int Area::size(){
 
 
 /*
-  TODO: operator==(lhs, rhs)
 
   Overload the == operator for two Area objects as a global/free function. Two
   Area objects are only equal when their local authority code, all names, and
@@ -281,5 +280,11 @@ bool operator==(const Area& lhs, const Area& rhs){
         return false;
 
     return lhs.measures == rhs.measures;
+}
+
+
+void Area::merge(Area areaNew){
+    measures.insert(areaNew.measures.begin(), areaNew.measures.end());
+    names.insert(areaNew.names.begin(), areaNew.names.end());
 }
 

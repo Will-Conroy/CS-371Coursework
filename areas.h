@@ -30,6 +30,7 @@
 #include <string>
 #include <tuple>
 #include <map>
+#include <unordered_set>
 #include "datasets.h"
 #include "area.h"
 
@@ -77,7 +78,7 @@ public:
   Areas();
 
   void setArea(std::string localAuthorityCode, Area area);
-  Area getArea(std::string localAuthorityCode);
+  Area& getArea(std::string localAuthorityCode);
   unsigned int size();
 
   
