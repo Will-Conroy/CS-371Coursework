@@ -129,7 +129,7 @@ Area& Areas::getArea(std::string localAuthorityCode){
     
     auto size = areas.size(); // returns 1
 */
-unsigned int Areas::size() {
+unsigned int Areas::size() const{
     return this->areas.size();
 }
 

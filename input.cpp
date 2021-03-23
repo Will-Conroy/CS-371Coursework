@@ -19,8 +19,6 @@
 #include "input.h"
 
 /*
-
-
   Constructor for an InputSource.
 
   @param source
@@ -29,8 +27,6 @@
 InputSource::InputSource(const std::string& source): source(source){};
 
 /*
-
-
   This function should be callable from a constant context.
 
   @return
@@ -41,8 +37,6 @@ std::string InputSource::getSource(){
 }
 
 /*
-
-
   Constructor for a file-based source.
 
   @param path
@@ -54,7 +48,6 @@ std::string InputSource::getSource(){
 InputFile::InputFile(const std::string& filePath) : InputSource(filePath){};
 
 /*
-
   Open a file stream to the file path retrievable from getSource()
   and return a reference to the stream.
 
