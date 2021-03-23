@@ -207,7 +207,7 @@ void Area::setMeasure(std::string codename, Measure measure){
     area.setMeasure(code, measure);
     auto size = area.size();
 */
-unsigned int Area::size(){
+unsigned int Area::size() const{
     return this->measures.size();
 }
 

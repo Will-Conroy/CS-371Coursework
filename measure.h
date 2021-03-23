@@ -34,13 +34,17 @@ private:
 public:
   Measure() = default;
   Measure(std::string code, const std::string &label);
-  const std::string getCodename();
-  std::string getLabel();
+
   void setLabel(std::string label);
-  float getValue(unsigned int key);
   void setValue(unsigned int key, float value);
+
+  float getValue(unsigned int key);
+  std::string getLabel();
+  const std::string getCodename();
+
   unsigned int size();
   void merge(Measure measureNew);
+
   friend bool operator==(const Measure& lhs, const Measure& rhs);
 };
 

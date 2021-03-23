@@ -46,7 +46,7 @@ public:
     Measure& getMeasure(const std::string key);
 
     void setMeasure(std::string codename, Measure measure);
-    unsigned int size();
+    unsigned int size() const;
 
     friend bool operator==(const Area& lhs, const Area& rhs);
     void merge(Area areaNew);
