@@ -11,9 +11,7 @@
   streams. The actual handling of the data from that stream is handled
   by the functions in data.cpp. See the header file for additional comments.
   
-  Each function you must implement has a TODO in its comment block. You may
-  have to implement additional functions. You may implement additional
-  functions not specified.
+
  */
 
 #include "input.h"

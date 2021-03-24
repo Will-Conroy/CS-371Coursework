@@ -12,7 +12,6 @@
   Measure objects for a given local area, along with names for that area and a
   unique authority code.
 
-  TODO: Read the block comments with TODO in area.cpp to know which 
   functions and member variables you need to declare in this class.
  */
 
@@ -26,8 +25,7 @@
   for the area in any number of different languages, and a container for the
   Measures objects.
 
-  TODO: Based on your implementation, there may be additional constructors
-  TODo: change to maps
+
   or functions you implement here, and perhaps additional operators you may wish
   to overload.
 */

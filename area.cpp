@@ -1,6 +1,3 @@
-
-
-
 /*
   +---------------------------------------+
   | BETH YW? WELSH GOVERNMENT DATA PARSER |
@@ -16,7 +13,6 @@
   This file contains numerous functions you must implement. Each function you
   must implement has a
 */
-
 #include <stdexcept>
 #include "bethyw.h"
 #include "area.h"
@@ -246,7 +242,6 @@ unsigned int Area::size() const{
 
 
 /*
-
   Overload the == operator for two Area objects as a global/free function. Two
   Area objects are only equal when their local authority code, all names, and
   all data are equal.
@@ -277,9 +272,8 @@ bool operator==(const Area& lhs, const Area& rhs){
     return lhs.measures == rhs.measures;
 }
 
-
+/*TODO: Write comments*/
 void Area::merge(Area areaNew){
     measures.insert(areaNew.measures.begin(), areaNew.measures.end());
     names.insert(areaNew.names.begin(), areaNew.names.end());
 }
-

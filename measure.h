@@ -10,7 +10,6 @@
 
   This file contains the decalaration of the Measure class.
 
-  TODO: Read the block comments with TODO in measure.cpp to know which 
   functions and member variables you need to declare in this class.
  */
 
@@ -21,7 +20,6 @@
   The Measure class contains a measure code, label, and a container for readings
   from across a number of years.
 
-  TODO: Based on your implementation, there may be additional constructors
   or functions you implement here, and perhaps additional operators you may wish
   to overload.
 */
@@ -42,8 +40,12 @@ public:
   std::string getLabel();
   const std::string getCodename();
 
-  unsigned int size();
+  unsigned int size() const;
+  float getDifference() const;
+  float getDifferenceAsPercentage() const;
+  float getAverage() const;
   void merge(Measure measureNew);
+
 
   friend bool operator==(const Measure& lhs, const Measure& rhs);
 };

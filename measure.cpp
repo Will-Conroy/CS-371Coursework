@@ -20,6 +20,7 @@
 
 #include <stdexcept>
 #include <string>
+#include <numeric>
 
 #include "measure.h"
 #include "bethyw.h"
@@ -198,7 +199,7 @@ void Measure::setValue(unsigned int key, float value){
     measure.setValue(1999, 12345678.9);
     auto size = measure.size(); // returns 1
 */
-unsigned int Measure::size(){
+unsigned int Measure::size() const{
     return readings.size();
 }
 
@@ -219,6 +220,9 @@ unsigned int Measure::size(){
     measure.setValue(2001, 12345679.9);
     auto diff = measure.getDifference(); // returns 1.0
 */
+float Measure::getDifference() const{
+    return  readings.end()->second - readings.begin()->second;
+}
 
 
 /*
@@ -238,6 +242,11 @@ unsigned int Measure::size(){
     measure.setValue(2010, 12345679.9);
     auto diff = measure.getDifferenceAsPercentage();
 */
+float Measure::getDifferenceAsPercentage() const{
+    if(getDifference() == 0)
+        return 0;
+    return (getDifference()/readings.begin()->second) * 100;
+}
 
 
 /*
@@ -256,6 +265,18 @@ unsigned int Measure::size(){
     measure.setValue(2001, 12345679.9);
     auto diff = measure.getAverage(); // returns 12345678.4
 */
+
+float Measure::getAverage() const{
+
+    if(readings.size() == 0)
+        return 0;
+
+    float sum = 0;
+    for (auto const& reading : readings)
+        sum += reading.second;
+
+    return sum/readings.size();
+}
 
 
 /*
@@ -297,8 +318,6 @@ unsigned int Measure::size(){
 
 
 /*
-  TODO: operator==(lhs, rhs)
-
   Overload the == operator for two Measure objects. Two Measure objects
   are only equal when their codename, label and data are all equal.
 

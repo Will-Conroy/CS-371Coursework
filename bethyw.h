@@ -11,7 +11,6 @@
   This file contains declarations for the helper functions for initialising and
   running Beth Yw?
 
-  TODO: Read the block comments with TODO in bethyw.cpp to know which 
   functions you need to declare in this file.
  */
 
@@ -22,7 +21,7 @@
 #include "lib_cxxopts.hpp"
 
 #include "datasets.h"
-#include "Areas.h"
+#include "areas.h"
 
 const char DIR_SEP =
 #ifdef _WIN32
@@ -33,9 +32,7 @@ const char DIR_SEP =
 
 namespace BethYw {
 
-/*
-  TODO: Enter your student number here!
-*/
+
 const std::string STUDENT_NUMBER = "976789";
 
 /*

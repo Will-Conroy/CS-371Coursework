@@ -15,7 +15,7 @@
   various populate() functions) and creating the Area and Measure objects.
 
   This file contains numerous functions you must implement. Each function you
-  must implement has a TODO block comment. 
+  must implement has a
 */
 
 #include <stdexcept>
@@ -75,11 +75,9 @@ void Areas::setArea(std::string localAuthorityCode, Area area) {
 
     if(areas.find(localAuthorityCode) == areas.end()){
         areas.insert(std::pair<std::string, Area>(localAuthorityCode, area));
-
     }else{
         area.merge(areas.at(localAuthorityCode));
         areas.at(localAuthorityCode) = area;
-
     }
 }
 
