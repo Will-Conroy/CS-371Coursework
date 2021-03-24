@@ -37,15 +37,12 @@
 using json = nlohmann::json;
 
 /*
-
   Constructor for an Areas object.
 
   @example
     Areas data = Areas();
 */
-Areas::Areas() {
-    //this->areas = std::unordered_set<Area> areas();
-}
+Areas::Areas() {}
 
 /*
   Add a particular Area to the Areas object.
@@ -128,7 +125,7 @@ Area& Areas::getArea(std::string localAuthorityCode){
     auto size = areas.size(); // returns 1
 */
 unsigned int Areas::size() const{
-    return this->areas.size();
+    return areas.size();
 }
 
 /*
@@ -184,47 +181,32 @@ void Areas::populateFromAuthorityCodeCSV(
     std::istream &is,
     const BethYw::SourceColumnMapping &cols,
     const StringFilterSet * const areasFilter) {
+
     //TODO: add more error handling if you get time
-    if(cols.size() < 3){
+    if(cols.size() < 3)
         throw std::out_of_range("Not enough columns");
 
-    }
-
-    if(!(is.good())){
+    if(!(is.good()))
         throw (std::runtime_error("Failed to open file"));
-    }
 
-
-    //is.open();
-
-
+    //reading first line which is just the name of cols
+    //As coursework states that this should remain constant, throw away the line
     std::string line;
-    //reading first line which is just name of comlumes
     std::getline(is,line);
-    //TODO: change so that it get all verable in tuple then checks them
-    if(areasFilter == nullptr || areasFilter->empty()){
-        //creates all areas
-        while (std::getline(is, line)) {
-            std::string code = getVerableCSV(line);
-            std::string engName = getVerableCSV(line);
-            std::string cymName = getVerableCSV(line);
-            Area temp(code);
-            temp.setName("eng",engName);
-            temp.setName("cym",cymName);
-            this->setArea(code, temp);
 
-        }
-    }else{
-        while (std::getline(is, line)) {
-            std::string code = getVerableCSV(line);
-            if(areasFilter->find(code) != areasFilter->end()){
-                std::string engName = getVerableCSV(line);
-                std::string cymName = getVerableCSV(line);
-                Area temp(code);
-                temp.setName("eng",engName);
-                temp.setName("cym",cymName);
-                this->setArea(code, temp);
-            }
+    //check if areasFilter is give at all OR that it is just empty
+    bool all = false;
+    if(areasFilter == nullptr || areasFilter->empty())
+        all = true;
+
+    while (std::getline(is, line)) {
+        std::string code = getVerableCSV(line);
+
+        if( all || areasFilter->find(code) != areasFilter->end()){
+            Area temp(code);
+            temp.setName("eng", getVerableCSV(line));
+            temp.setName("cym", getVerableCSV(line));
+            this->setArea(code, temp);
         }
     }
 }
@@ -583,8 +565,6 @@ void Areas::populate(
 }
 
 /*
-  TODO: Areas::toJSON()
-
   Convert this Areas object, and all its containing Area instances, and
   the Measure instances within those, to values.
 
@@ -657,9 +637,11 @@ void Areas::populate(
 */
 std::string Areas::toJSON() const {
   json j;
-    std::string jsonString = "{";
+  std::string jsonString = "{";
+
   for (auto const& area : areas)
       jsonString += area.second.getJSONString();
+
   jsonString += "}";
   j = json::parse(jsonString);
 

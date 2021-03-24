@@ -110,8 +110,6 @@ void Area::setName(std::string lang, std::string name){
         }
     }
     this->names.insert( std::pair<std::string, std::string>(BethYw::convertToLower(lang),name));
-
-
 }
 
 /*
