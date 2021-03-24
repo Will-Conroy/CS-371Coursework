@@ -81,7 +81,6 @@ int BethYw::run(int argc, char *argv[]) {
     // The output as tables
     // std::cout << data << std::endl;
   }
-
   return 0;
 }
 
@@ -381,9 +380,7 @@ void BethYw::loadAreas(Areas areas, std::string dir, std::unordered_set<std::str
     auto type = InputFiles::AREAS.PARSER;
     auto& is = areasFile.open();
     areas.populate(is, type, cols, &areasFilter, nullptr, nullptr);
-
 }
-
 
 /*
   TODO: BethYw::loadDatasets(areas,
@@ -480,10 +477,3 @@ std::string BethYw::convertToLower(const std::string string) {
     }
     return lower;
 }
-
-
-
-
-
-
-
