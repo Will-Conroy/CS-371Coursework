@@ -72,7 +72,7 @@ Measure::Measure(std::string codename, const std::string &label) {
     ...
     auto codename2 = measure.getCodename();
 */
-const std::string Measure::getCodename(){
+const std::string Measure::getCodename() const{
     return this->codename;
 }
 
@@ -97,7 +97,7 @@ const std::string Measure::getCodename(){
     auto label = measure.getLabel();
 */
 
-std::string Measure::getLabel() {
+std::string Measure::getLabel() const {
     return this->label;
 }
 

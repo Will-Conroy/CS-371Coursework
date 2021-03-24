@@ -37,15 +37,14 @@ public:
   void setValue(unsigned int key, float value);
 
   float getValue(unsigned int key);
-  std::string getLabel();
-  const std::string getCodename();
-
-  unsigned int size() const;
+  std::string getLabel() const;
+  const std::string getCodename() const;
   float getDifference() const;
   float getDifferenceAsPercentage() const;
   float getAverage() const;
-  void merge(Measure measureNew);
 
+  unsigned int size() const;
+  void merge(Measure measureNew);
 
   friend bool operator==(const Measure& lhs, const Measure& rhs);
 };
