@@ -45,6 +45,7 @@ public:
 
   unsigned int size() const;
   void merge(Measure measureNew);
+  std::string getJSONString() const;
 
   friend bool operator==(const Measure& lhs, const Measure& rhs);
 };

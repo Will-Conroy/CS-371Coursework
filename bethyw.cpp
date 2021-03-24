@@ -58,21 +58,21 @@ int BethYw::run(int argc, char *argv[]) {
   std::string dir = args["dir"].as<std::string>() + DIR_SEP;
 
   // Parse other arguments and import data
-  // auto datasetsToImport = BethYw::parseDatasetsArg(args);
-  // auto areasFilter      = BethYw::parseAreasArg(args);
-  // auto measuresFilter   = BethYw::parseMeasuresArg(args);
-  // auto yearsFilter      = BethYw::parseYearsArg(args);
+   auto datasetsToImport = BethYw::parseDatasetsArg(args);
+   auto areasFilter      = BethYw::parseAreasArg(args);
+   auto measuresFilter   = BethYw::parseMeasuresArg(args);
+   auto yearsFilter      = BethYw::parseYearsArg(args);
 
   Areas data = Areas();
 
-  // BethYw::loadAreas(data, dir, areasFilter);
-  //
-  // BethYw::loadDatasets(data,
-  //                      dir,
-  //                      datasetsToImport,
-  //                      areasFilter,
-  //                      measuresFilter,
-  //                      yearsFilter);
+  BethYw::loadAreas(data, dir, areasFilter);
+
+  BethYw::loadDatasets(data,
+                        dir,
+                        datasetsToImport,
+                        areasFilter,
+                        measuresFilter,
+                        yearsFilter);
 
   if (args.count("json")) {
     // The output as JSON
@@ -374,16 +374,15 @@ std::tuple<unsigned int, unsigned int> BethYw::parseYearsArg(cxxopts::ParseResul
 
     BethYw::loadAreas(areas, "data", BethYw::parseAreasArg(args));
 */
-void BethYw::loadAreas(Areas areas, std::string dir, const StringFilterSet * const areasFilter){
+void BethYw::loadAreas(Areas areas, std::string dir, std::unordered_set<std::string> areasFilter){
     InputFile areasFile(dir + InputFiles::AREAS.FILE);
-
     auto fileNameCSV = InputFiles::AREAS.FILE;
     auto cols = InputFiles::AREAS.COLS;
-    areas.populate(areasFile.open(), AuthorityCodeCSV, cols, areasFilter);
+    auto type = InputFiles::AREAS.PARSER;
+    auto& is = areasFile.open();
+    areas.populate(is, type, cols, &areasFilter, nullptr, nullptr);
 
-};
-
-
+}
 
 
 /*
@@ -440,6 +439,15 @@ void BethYw::loadAreas(Areas areas, std::string dir, const StringFilterSet * con
       BethYw::parseMeasuresArg(args),
       BethYw::parseYearsArg(args));
 */
+void BethYw::loadDatasets(Areas areas,
+                        std::string dir,
+                        std::vector<InputFileSource>  datasetsToImport,
+                        const std::unordered_set<std::string> areasFilter,
+                        const std::unordered_set<std::string> measuresFilter,
+                        const std::tuple<unsigned int, unsigned int>& yearsFilter){
+    throw std::runtime_error("Some little cunt call Will didn't implement Areas::populateFromWelshStatsJSON");
+}
+
 /*TODO: ADD comments*/
 bool BethYw::insensitiveEquals(std::string a, std::string b){
     return convertToLower(a) == convertToLower(b);

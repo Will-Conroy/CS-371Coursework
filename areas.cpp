@@ -202,7 +202,7 @@ void Areas::populateFromAuthorityCodeCSV(
     //reading first line which is just name of comlumes
     std::getline(is,line);
     //TODO: change so that it get all verable in tuple then checks them
-    if(areasFilter == nullptr){
+    if(areasFilter == nullptr || areasFilter->empty()){
         //creates all areas
         while (std::getline(is, line)) {
             std::string code = getVerableCSV(line);
@@ -212,6 +212,7 @@ void Areas::populateFromAuthorityCodeCSV(
             temp.setName("eng",engName);
             temp.setName("cym",cymName);
             this->setArea(code, temp);
+
         }
     }else{
         while (std::getline(is, line)) {
@@ -656,7 +657,12 @@ void Areas::populate(
 */
 std::string Areas::toJSON() const {
   json j;
-  
+    std::string jsonString = "{";
+  for (auto const& area : areas)
+      jsonString += area.second.getJSONString();
+  jsonString += "}";
+  j = json::parse(jsonString);
+
   return j.dump();
 }
 
@@ -767,19 +773,14 @@ std::string Areas::toJSON() const {
     std::cout << areas << std::end;
 */
 
-/*
- * TODO: Implement me*/
-Area Areas::combinedAreas(Area original, Area newArea){
-    return original;
-}
 
-std::string Areas::getVerableCSV(std::string line){
+std::string Areas::getVerableCSV(std::string& line){
     if(line.find(",") == std::string::npos){
         return line;
     }
     std::size_t pos = line.find(",");
     std::string out = line.substr(0,pos);
-    line.erase (0,pos+1);
+    line = line.erase (0,pos+1);
     return out;
 }
 

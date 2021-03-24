@@ -13,9 +13,6 @@
   codename, and a Standard Library container for data. The data you need to 
   store is values, organised by year. I'd recommend storing the values as 
   doubles.
-
-  This file contains numerous functions you must implement. Each function you
-  must implement has a TODO block comment. 
 */
 
 #include <stdexcept>
@@ -26,8 +23,6 @@
 #include "bethyw.h"
 
 /*
-  TODO: Measure::Measure(codename, label);
-
   Construct a single Measure, that has values across many years.
 
   All StatsWales JSON files have a codename for measures. You should convert 
@@ -54,7 +49,6 @@ Measure::Measure(std::string codename, const std::string &label) {
 }
 
 /*
-  TODO: Measure::getCodename()
 
   Retrieve the code for the Measure. This function should be callable from a 
   constant context and must promise to not modify the state of the instance or 
@@ -78,8 +72,6 @@ const std::string Measure::getCodename() const{
 
 
 /*
-  TODO: Measure::getLabel()
-
   Retrieve the human-friendly label for the Measure. This function should be 
   callable from a constant context and must promise to not modify the state of 
   the instance and to not throw an exception.
@@ -103,8 +95,6 @@ std::string Measure::getLabel() const {
 
 
 /*
-  TODO: Measure::setLabel(label)
-
   Change the label for the Measure.
 
   @param label
@@ -122,8 +112,6 @@ void Measure::setLabel(std::string label) {
 
 
 /*
-  TODO: Measure::getValue(key)
-
   Retrieve a Measure's value for a given year.
 
   @param key
@@ -204,7 +192,6 @@ unsigned int Measure::size() const{
 }
 
 /*
-  TODO: Measure::getDifference()
 
   Calculate the difference between the first and last year imported. This
   function should be callable from a constant context and must promise to not
@@ -226,7 +213,6 @@ float Measure::getDifference() const{
 
 
 /*
-  TODO: Measure::getDifferenceAsPercentage()
 
   Calculate the difference between the first and last year imported as a 
   percentage. This function should be callable from a constant context and
@@ -250,8 +236,6 @@ float Measure::getDifferenceAsPercentage() const{
 
 
 /*
-  TODO: Measure::getAverage()
-
   Calculate the average/mean value for all the values. This function should be
   callable from a constant context and must promise to not change the state of 
   the instance or throw an exception.
@@ -341,10 +325,29 @@ bool operator==(const Measure& lhs, const Measure& rhs){
 
     return lhs.readings == rhs.readings;
 }
-
+/*TODO: write comment*/
 void Measure::merge(Measure measureNew){
     readings.insert(measureNew.readings.begin(), measureNew.readings.end());
 
 
+}
+/*
+ * "pop":{"2015":242316.0,"2016":244462.0,"2017":245480.0,"2018":246466.0},*/
+std::string Measure::getJSONString() const{
+    if(readings.size() == 0)
+        return "{}";
+    std::string out = "\"" + codename + "\" : {";
+
+    for (auto const& reading : readings){
+
+        out += "\"" + reading.first;
+        out += "\" :";
+        out += reading.second;
+        out += ", ";
+    }
+    //removes the last ,
+    out = out.substr(0, out.size()-1);
+    out += "}";
+    return out;
 }
 

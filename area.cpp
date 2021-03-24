@@ -16,6 +16,8 @@
 #include <stdexcept>
 #include "bethyw.h"
 #include "area.h"
+#include "lib_json.hpp"
+
 
 /*
   Construct an Area with a given local authority code.
@@ -241,6 +243,7 @@ unsigned int Area::size() const{
 */
 
 
+
 /*
   Overload the == operator for two Area objects as a global/free function. Two
   Area objects are only equal when their local authority code, all names, and
@@ -277,3 +280,39 @@ void Area::merge(Area areaNew){
     measures.insert(areaNew.measures.begin(), areaNew.measures.end());
     names.insert(areaNew.names.begin(), areaNew.names.end());
 }
+/*
+ *"<localAuthorityCode1>" : {
+                              "names": { "<languageCode1>": "<languageName1>",
+                                         "<languageCode2>": "<languageName2>"
+                                         …
+                                         "<languageCodeN>": "<languageNameN>" },
+                              "measures" : { "<year1>": <value1>,
+                                             "<year2>": <value2>,
+                                             …
+                                            "<yearN>": <valueN> }
+                               },
+    "<localAuthorityCode2>" : {
+                              "names": { "<languageCode1>": "<languageName1>",
+                                         "<languageCode2>": "<languageName2>"
+                                         …
+                                         "<languageCodeN>": "<languageNameN>" },
+                              "measures" : { "<year1>": <value1>,
+                                             "<year2>": <value2>,
+                                             …
+                                            "<yearN>": <valueN> }
+                               }*/
+std::string Area::getJSONString() const {
+    std::string out = "\"" + localAuthorityCode + "\" : {\"names\": {";
+    for (auto const& name : names){
+        out += "\"" + name.first + "\" : \""  + name.second + "\", ";
+    }
+    //removes the last ,
+    out = out.substr(0, out.size()-1);
+    out += "}, \"measures\": {";
+    for (auto const& measure : measures){
+        out += measure.second.getJSONString();
+    }
+    out += "}";
+    return out;
+}
+

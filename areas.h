@@ -71,8 +71,7 @@ using AreasContainer = std::map<std::string, Area>;
 class Areas {
 private:
     AreasContainer areas;
-    Area combinedAreas(Area original, Area newArea);
-    std::string getVerableCSV(std::string line);
+    std::string getVerableCSV(std::string& line);
 
 public:
   Areas();

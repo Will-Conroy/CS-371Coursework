@@ -18,7 +18,9 @@
 #include <string>
 #include <map>
 #include <iostream>
+#include <vector>
 #include "measure.h"
+#include "lib_json.hpp"
 
 /*
   An Area object consists of a unique authority code, a container for names
@@ -42,11 +44,12 @@ public:
     std::string getName(const std::string lang) const;
     void setName(std::string lang, std::string name);
     Measure& getMeasure(const std::string key);
-
     void setMeasure(std::string codename, Measure measure);
     unsigned int size() const;
+    std::string getJSONString() const;
 
     friend bool operator==(const Area& lhs, const Area& rhs);
+
     void merge(Area areaNew);
 
 
