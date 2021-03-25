@@ -28,10 +28,7 @@
   InputSource is an abstract/purely virtual base class for all input source 
   types. In future versions of our application, we may support multiple input 
   data sources such as files and web pages. Therefore, this virtual class 
-  will allow us to mix/match sources as needed. 
-
-  there may be additional constructors or functions you implement here,
-  and perhaps additional operators you may wish to overload.
+  will allow us to mix/match sources as needed.
 */
 class InputSource {
 protected:

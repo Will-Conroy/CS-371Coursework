@@ -1,6 +1,5 @@
 #ifndef AREAS_H
 #define AREAS_H
-
 /*
   +---------------------------------------+
   | BETH YW? WELSH GOVERNMENT DATA PARSER |
@@ -31,6 +30,7 @@
 #include <unordered_set>
 #include "datasets.h"
 #include "area.h"
+
 /*
   An alias for filters based on strings such as categorisations e.g. area,
   and measures.
@@ -53,29 +53,28 @@ using AreasContainer = std::map<std::string, Area>;
 /*
   Areas is a class that stores all the data categorised by area. The 
   underlying Standard Library container is customisable using the alias above.
-
-  To understand the functions declared below, read the comments in areas.cpp
-  and the coursework worksheet. Briefly: populate() is called by bethyw.cpp to
-  populate data inside an Areas instance. This function will hand off the
-  specific parsing of code to other functions, based on the value of 
-  BethYw::SourceDataType.
-
 */
+
 class Areas {
+
 private:
+    //Key Local authority code | Value Area objects
     AreasContainer areas;
-    std::string getVerableCSV(std::string& line);
+
+    /*----Helper----*/
+    std::string getVariableCSV(std::string& line);
 
 public:
+  /*----Constructors----*/
   Areas();
 
+  /*----Setters---*/
   void setArea(std::string localAuthorityCode, Area area);
+
+  /*----Getters---*/
   Area& getArea(std::string localAuthorityCode);
-  unsigned int size() const;
 
-  
-
-/*----Populate functions----*/
+/*----Populate----*/
   void populate(
       std::istream& is,
       const BethYw::SourceDataType& type,
@@ -87,14 +86,12 @@ public:
       const BethYw::SourceColumnMapping& cols,
       const StringFilterSet * const areasFilter = nullptr,
       const StringFilterSet * const measuresFilter = nullptr,
-      const YearFilterTuple * const yearsFilter = nullptr)
-      noexcept(false);
+      const YearFilterTuple * const yearsFilter = nullptr) noexcept(false);
 
     void populateFromAuthorityCodeCSV(
             std::istream& is,
             const BethYw::SourceColumnMapping& cols,
-            const StringFilterSet * const areas = nullptr)
-    noexcept(false);
+            const StringFilterSet * const areas = nullptr) noexcept(false);
 
     void populateFromWelshStatsJSON(std::istream &is,
                                            const BethYw::SourceColumnMapping &cols,
@@ -107,8 +104,12 @@ public:
                                                const StringFilterSet * const areasFilter,
                                                const StringFilterSet * const measuresFilter,
                                                const YearFilterTuple * const yearsFilter) noexcept(false);
-  std::string toJSON() const;
 
+  /*----Misalliance---*/
+  std::string toJSON() const;
+  unsigned int size() const;
+
+  /*---Override---*/
   friend std::ostream& operator<<(std::ostream& os, const Areas& area);
 
 };

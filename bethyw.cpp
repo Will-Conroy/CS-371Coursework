@@ -445,39 +445,115 @@ void BethYw::loadDatasets(Areas areas,
     throw std::runtime_error("Some little cunt call Will didn't implement Areas::populateFromWelshStatsJSON");
 }
 
-/*TODO: ADD comments*/
-bool BethYw::insensitiveEquals(std::string a, std::string b){
+/*
+ * Compares two string cap insensitively.
+
+  @param a
+    std::string
+
+  @param b
+    std::string
+
+  @return
+    bool
+
+  @example
+    std::string a;
+    std::string b;
+    bool = BethYw::insensitiveEquals(a,b);
+    */
+bool BethYw::insensitiveEquals(std::string const a, std::string const b){
     return convertToLower(a) == convertToLower(b);
 }
 
-/*TODO: ADD comments*/
+/*
+ * Turns a year as a string into a unsigned int
+ * and check if it is valid (if it in the future or has letter)
+ * SEPICAL CASE: "0" returns 0;
+
+  @param a
+    std::string
+
+  @param b
+    std::string
+
+  @return
+    bool
+
+  @throw
+    std::invalid_argument if year is before 1000 AD
+
+  @throw
+    std::invalid_argument if yearString has a no digits char
+
+  @throw
+    std::invalid_argument if dates is in the future
+
+  @example
+    std::string a;
+    std::string b;
+    bool = BethYw::insensitiveEquals(a,b)
+    */
 unsigned int BethYw::validateYear(std::string yearSting){
-    if(yearSting == "0"){
+
+    if(yearSting == "0")
         return 0;
-    }
-    if(yearSting.size() == 4) {
-        for (unsigned i = 0; i < 4; i++) {
-            if (!isdigit(yearSting[i])) {
-                throw (std::invalid_argument("Invalid input for years argument"));
-            }
-        }
-        unsigned int year = std::stoi(yearSting);
-        if ( year > 2021 || year < 1940) {
+
+    if(yearSting.size() != 4)
+        throw (std::invalid_argument("Invalid input for years argument"));
+
+    for(char & ch : yearSting){
+        if (!isdigit(ch))
             throw (std::invalid_argument("Invalid input for years argument"));
-        }
-        return year;
     }
-    throw (std::invalid_argument("Invalid input for years argument"));
+
+    unsigned int year = std::stoi(yearSting);
+
+    if ( year >= 2021 || year < 1000)
+        throw (std::invalid_argument("Invalid input for years argument"));
+
+    return year;
 }
 
+/*
+    Covert string into a string with only lower case letters
+
+  @param string
+    std::string
+
+  @return
+    std::string
+
+  @example
+    std::string message = "YoU WaNT TO gIVe me FuLL MaRKs";
+    std::string newMessage = BethYw::convertToLower(message);
+    (newMessage == "you want to give me full marks) == ture;
+ */
 std::string BethYw::convertToLower(const std::string string) {
     std::string lower = "";
-    for (unsigned i = 0; i < string.size(); i++) {
+
+    for (unsigned i = 0; i < string.size(); i++)
         lower += std::tolower(string[i]);
-    }
+
     return lower;
 }
 
+/*
+ * Checks if a value is in a StringFilterSet
+
+  @param filter
+    StringFilterSet
+
+  @param value
+    std::string
+
+  @return
+    bool
+
+  @example
+    StringFilterSet baconFilter;
+    bool = BethYw::filterContains(baconFilter, "Smoked Bacon");
+ */
 bool BethYw::filterContains(const StringFilterSet * const filter, std::string value){
     return filter->find(value) != filter->end();
 }

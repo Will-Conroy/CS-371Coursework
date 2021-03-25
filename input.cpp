@@ -1,5 +1,3 @@
-
-
 /*
   +---------------------------------------+
   | BETH YW? WELSH GOVERNMENT DATA PARSER |
@@ -66,6 +64,3 @@ std::istream& InputFile::open(){
     }
     return *fileStream;
 }
-
-
-

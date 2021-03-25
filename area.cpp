@@ -18,7 +18,6 @@
 #include "area.h"
 #include "lib_json.hpp"
 
-
 /*
   Construct an Area with a given local authority code.
 
@@ -42,7 +41,6 @@ Area::Area(const std::string& localAuthorityCode): localAuthorityCode(localAutho
     ...
     auto authCode = area.getLocalAuthorityCode();
 */
-
 std::string Area::getLocalAuthorityCode() const {
     return this->localAuthorityCode;
 }
@@ -75,7 +73,6 @@ std::string Area::getLocalAuthorityCode() const {
         throw (std::out_of_range("No known lang"));
     return names.find(lang)->second;
 }
-
 
 /*
   Set a name for the Area in a specific language.
@@ -134,13 +131,11 @@ void Area::setName(std::string lang, std::string name){
     ...
     auto measure2 = area.getMeasure("pop");
 */
-
 Measure& Area::getMeasure(const std::string key) {
     if(measures.find(BethYw::convertToLower(key)) == measures.end())
         throw std::out_of_range("No measure found matching " + key);
     return measures.at(key);
 }
-
 
 /*
   Add a particular Measure to this Area object. Note that the Measure's
@@ -207,10 +202,7 @@ unsigned int Area::size() const{
     return this->measures.size();
 }
 
-
 /*
-  TODO: operator<<(os, area)
-
   Overload the stream output operator as a free/global function.
 
   Output the name of the Area in English and Welsh, followed by the local
@@ -239,8 +231,13 @@ unsigned int Area::size() const{
     area.setName("eng", "Powys");
     std::cout << area << std::endl;
 */
-
-
+std::ostream &operator<<(std::ostream &os, const Area &area) {
+    os << area.getName("eng") << " / " << area.getName("cym") << '('
+       << area.getLocalAuthorityCode() << ')' << std::endl;
+    for(auto const& measure : area.measures)
+        os << measure.second;
+    return os;
+}
 
 /*
   Overload the == operator for two Area objects as a global/free function. Two
@@ -273,11 +270,29 @@ bool operator==(const Area& lhs, const Area& rhs){
     return lhs.measures == rhs.measures;
 }
 
-/*TODO: Write comments*/
+/*
+ * Combineds two areas. New data replace any data in the old area but data not contained in the new area but in the old
+ * area is kept.
+
+  @param areaNew
+    An Area object
+
+
+
+  @return
+   void
+
+  @example
+    Area area1("MYCODE1");
+    Area area2("MYCODE1");
+    area1.merge(area2);
+ *
+ * */
 void Area::merge(Area areaNew){
     measures.insert(areaNew.measures.begin(), areaNew.measures.end());
     names.insert(areaNew.names.begin(), areaNew.names.end());
 }
+
 /*
  *"<localAuthorityCode1>" : {
                               "names": { "<languageCode1>": "<languageName1>",
@@ -314,13 +329,4 @@ std::string Area::getJSONString() const {
     return out;
 }
 
-std::ostream &operator<<(std::ostream &os, const Area &area) {
-    os << area.getName("eng") << '/' << area.getName("cym") << '('
-    << area.getLocalAuthorityCode() << ')' << std::endl;
-    for(auto const& measure : area.measures)
-        os << measure.second;
-    return os;
-
-
-}
 

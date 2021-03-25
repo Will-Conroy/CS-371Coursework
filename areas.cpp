@@ -1,6 +1,3 @@
-
-
-
 /*
   +---------------------------------------+
   | BETH YW? WELSH GOVERNMENT DATA PARSER |
@@ -13,9 +10,6 @@
 
   Areas is also responsible for importing data from a stream (using the
   various populate() functions) and creating the Area and Measure objects.
-
-  This file contains numerous functions you must implement. Each function you
-  must implement has a
 */
 
 #include <stdexcept>
@@ -67,11 +61,11 @@ Areas::Areas() {}
     Area area(localAuthorityCode);
     data.setArea(localAuthorityCode, area);
 */
-
 void Areas::setArea(std::string localAuthorityCode, Area area) {
 
     if(areas.find(localAuthorityCode) == areas.end()){
         areas.insert(std::pair<std::string, Area>(localAuthorityCode, area));
+
     }else{
         area.merge(areas.at(localAuthorityCode));
         areas.at(localAuthorityCode) = area;
@@ -100,13 +94,11 @@ void Areas::setArea(std::string localAuthorityCode, Area area) {
     Area area2 = areas.getArea("W06000023");
 */
 Area& Areas::getArea(std::string localAuthorityCode){
-
     if(areas.find(localAuthorityCode) == areas.end())
         throw std::out_of_range("No area found matching " + localAuthorityCode);
 
     return areas.at(localAuthorityCode);
 }
-
 
 /*
   Retrieve the number of Areas within the container. This function should be 
@@ -199,68 +191,19 @@ void Areas::populateFromAuthorityCodeCSV(
     if(areasFilter == nullptr || areasFilter->empty())
         all = true;
     while (std::getline(is, line)) {
-        std::string code = getVerableCSV(line);
+        std::string code = getVariableCSV(line);
         if( all || areasFilter->find(code) != areasFilter->end()){
             Area temp(code);
-            temp.setName("eng", getVerableCSV(line));
-            temp.setName("cym", getVerableCSV(line));
+            temp.setName("eng", getVariableCSV(line));
+            temp.setName("cym", getVariableCSV(line));
             this->setArea(code, temp);
         }
     }
 }
 
 /*
-  TODO: Areas::populateFromWelshStatsJSON(is,
-                                          cols,
-                                          areasFilter,
-                                          measuresFilter,
-                                          yearsFilter)
-
-  Data from StatsWales is in the JSON format, and contains three
-  top-level keys: odata.metadata, value, odata.nextLink. value contains the
-  data we need. Rather than been hierarchical, it contains data as a
-  continuous list (e.g. as you would find in a table). For each row in value,
-  there is a mapping of various column headings and their respective vaues.
-
-  Therefore, you need to go through the items in value (in a loop)
-  using a JSON library. To help you, I've selected the nlohmann::json
-  library that you must use for your coursework. Read up on how to use it here:
-  https://github.com/nlohmann/json
-
-  Example of using this library:
-    - Reading/parsing in from a stream is very simply using the >> operator:
-        json j;
-        stream >> j;
-
-    - Looping through parsed JSON is done with a simple for each loop. Inside
-      the loop, you can access each using the array syntax, with the key/
-      column name, e.g. data["Localauthority_ItemName_ENG"] gives you the
-      local authority name:
-        for (auto& el : j["value"].items()) {
-           auto &data = el.value();
-           std::string localAuthorityCode = data["Localauthority_ItemName_ENG"];
-           // do stuff here...
-        }
-
-  In this function, you will have to parse the JSON datasets, extracting
-  the local authority code, English name (the files only contain the English
-  names), and each measure by year.
-
-  If you encounter an Area that does not exist in the Areas container, you
-  should create the Area object
-
-  If areasFilter is a non-empty set only include areas matching the filter. If
-  measuresFilter is a non-empty set only include measures matching the filter.
-  If yearsFilter is not equal to <0,0>, only import years within the range
-  specified by the tuple (inclusive).
-
-  I've provided the column names for each JSON file that you need to parse
-  as std::strings in datasets.h. This mapping should be passed through to the
-  cols parameter of this function.
-
-  Note that in the JSON format, years are stored as strings, but we need
-  them as ints. When retrieving values from the JSON library, you will
-  have to cast them to the right type.
+    Takes json dir and populated the area contaoner with that data which matches the filer.
+    if a filter is missing or emtpy (<0,0> for yearsfiler) all data is imporated
 
   @param is
     The input stream from InputSource
@@ -319,11 +262,11 @@ void Areas::populateFromWelshStatsJSON(std::istream &is,
             const StringFilterSet * const measuresFilter,
             const YearFilterTuple * const yearsFilter){
 
-    //get years for readabilty
+    //get years for readability
     unsigned int yearStart = std::get<0>(*yearsFilter);
     unsigned int yearEnd = std::get<1>(*yearsFilter);
 
-    //moved nullptr to left for small efficay
+    //moved nullptr to left for small efficacy
     bool allAreas = areasFilter == nullptr || areasFilter->empty();
     bool allMeasures = areasFilter == nullptr || measuresFilter->empty();
     bool allYears = yearsFilter == nullptr ||(yearStart == 0 && yearEnd == 0);
@@ -342,6 +285,7 @@ void Areas::populateFromWelshStatsJSON(std::istream &is,
                 temp.setName("eng", data[cols.at(BethYw::SourceColumn::AUTH_NAME_ENG)]);
                 areas.insert({localAuthorityCode, temp});
             }
+
             std::string lowerMeasureCode = BethYw::convertToLower(data[cols.at(BethYw::SourceColumn::MEASURE_CODE)]);
             if(allMeasures || BethYw::filterContains(measuresFilter, lowerMeasureCode)){
                 std::string measureCode = data[cols.at(BethYw::SourceColumn::MEASURE_CODE)];
@@ -433,7 +377,6 @@ void Areas::populateFromAuthorityByYearCSV(std::istream &is,
 }
 
 /*
-
   Parse data from an standard input stream `is`, that has data of a particular
   `type`, and with a given column mapping in `cols`.
 
@@ -578,15 +521,16 @@ void Areas::populate(
     const BethYw::SourceColumnMapping &cols,
     const StringFilterSet * const areasFilter,
     const StringFilterSet * const measuresFilter,
-    const YearFilterTuple * const yearsFilter)
-     {
-
+    const YearFilterTuple * const yearsFilter){
   if (type == BethYw::AuthorityCodeCSV && !(cols.size() < 3)) {
       populateFromAuthorityCodeCSV(is, cols, areasFilter);
+
   } else if(type == BethYw::AuthorityByYearCSV && !(cols.size() < 3)){
       populateFromAuthorityByYearCSV(is, cols, areasFilter, measuresFilter, yearsFilter);
+
   } else if(type == BethYw::WelshStatsJSON && !(cols.size() < 6 )) {
       populateFromWelshStatsJSON(is, cols, areasFilter, measuresFilter, yearsFilter);
+
   }else{
     throw std::runtime_error("Areas::populate: Unexpected data type");
   }
@@ -677,97 +621,10 @@ std::string Areas::toJSON() const {
 }
 
 /*
-  TODO: operator<<(os, areas)
-
   Overload the << operator to print all of the imported data.
 
-  Output should be formatted like the following to pass the tests. Areas should
-  be printed, ordered alphabetically by their local authority code. Measures 
+   Areas are printed, ordered alphabetically by their local authority code. Measures
   within each Area should be ordered alphabetically by their codename.
-
-  See the coursework specification for more information, although for reference
-  here is a quick example of how output should be formatted:
-
-    <English name of area 1> / <Welsh name of area 1> (<authority code 1>)
-    <Measure 1 name> (<Measure 1 code>)
-     <year 1>  <year 2> <year 3> ...  <year n>  Average    Diff.   % Diff.
-    <value 1>  <year 2> <year 3> ... <value n> <mean 1> <diff 1> <diffp 1>
-
-    <Measure 2 name> (<Measure 2 code>)
-     <year 1>  <year 2> <year 3> ...  <year n>  Average    Diff.   % Diff.
-    <value 1>  <year 2> <year 3> ... <value n> <mean 2> <diff 2> <diffp 2>
-
-    <Measure 3 name> (<Measure 3 code>)
-     <year 1>  <year 2> <year 3> ...  <year n>  Average    Diff.   % Diff.
-    <value 1>  <year 2> <year 3> ... <value n> <mean 3> <diff 3> <diffp 3>
-
-    ...
-
-    <Measure x name> (<Measure x code>)
-     <year 1>  <year 2> <year 3> ...  <year n>  Average    Diff.   % Diff.
-    <value 1>  <year 2> <year 3> ... <value n> <mean x> <diff x> <diffp x>
-
-
-    <English name of area 2> / <Welsh name of area 2> (<authority code 2>)
-    <Measure 1 name> (<Measure 1 code>)
-     <year 1>  <year 2> <year 3> ...  <year n>  Average    Diff.   % Diff.
-    <value 1>  <year 2> <year 3> ... <value n> <mean 1> <diff 1> <diffp 1>
-
-    <Measure 2 name> (<Measure 2 code>)
-     <year 1>  <year 2> <year 3> ...  <year n>  Average    Diff.   % Diff.
-    <value 1>  <year 2> <year 3> ... <value n> <mean 2> <diff 2> <diffp 2>
-
-    <Measure 3 name> (<Measure 3 code>)
-     <year 1>  <year 2> <year 3> ...  <year n>  Average    Diff.   % Diff.
-    <value 1>  <year 2> <year 3> ... <value n> <mean 3> <diff 3> <diffp 3>
-
-    ...
-
-    <Measure x name> (<Measure x code>)
-     <year 1>  <year 2> <year 3> ...  <year n>
-    <value 1>  <year 2> <year 3> ... <value n> <mean x> <diff x> <diffp x>
-
-    ...
-
-    <English name of area y> / <Welsh name of area y> (<authority code y>)
-    <Measure 1 name> (<Measure 1 codename>)
-     <year 1>  <year 2> <year 3> ...  <year n>
-    <value 1>  <year 2> <year 3> ... <value n> <mean 1> <diff 1> <diffp 1>
-
-    <Measure 2 name> (<Measure 2 codename>)
-     <year 1>  <year 2> <year 3> ...  <year n>
-    <value 1>  <year 2> <year 3> ... <value n> <mean 2> <diff 2> <diffp 2>
-
-    <Measure 3 name> (<Measure 3 codename>)
-     <year 1>  <year 2> <year 3> ...  <year n>
-    <value 1>  <year 2> <year 3> ... <value n> <mean 3> <diff 3> <diffp 3>
-
-    ...
-
-    <Measure x name> (<Measure x codename>)
-     <year 1>  <year 2> <year 3> ...  <year n>  Average    Diff.   % Diff.
-    <value 1>  <year 2> <year 3> ... <value n> <mean x> <diff x> <diffp x>
-
-  With real data, your output should start like this for the command
-  bethyw --dir <dir> -p popden -y 1991-1993 (truncated for readability):
-
-    Isle of Anglesey / Ynys Môn (W06000001)
-    Land area (area) 
-          1991       1992       1993    Average    Diff.  % Diff. 
-    711.680100 711.680100 711.680100 711.680100 0.000000 0.000000 
-
-    Population density (dens) 
-         1991      1992      1993   Average    Diff.  % Diff. 
-    97.126504 97.486216 98.038430 97.550383 0.911926 0.938905 
-
-    Population (pop) 
-            1991         1992         1993      Average      Diff.  % Diff. 
-    69123.000000 69379.000000 69772.000000 69424.666667 649.000000 0.938906 
-
-
-    Gwynedd / Gwynedd (W06000002)
-    Land area (Area)
-    ...
 
   @param os
     The output stream to write to
@@ -800,17 +657,20 @@ std::ostream &operator<<(std::ostream &os, const Areas &areas){
 
   @example
     std::string line = "give,me,100%,please";
-    std::string give = area.getVerableCSV(line);
+    std::string give = area.getVariableCSV(line);
     //line = "me,100%,please"; - now
 */
 
-std::string Areas::getVerableCSV(std::string& line){
-    if(line.find(",") == std::string::npos){
+std::string Areas::getVariableCSV(std::string& line){
+    if(line.find(",") == std::string::npos)
         return line;
-    }
+
     std::size_t pos = line.find(",");
     std::string out = line.substr(0,pos);
+
+    //deletes outputted variable
     line = line.erase (0,pos+1);
+
     return out;
 }
 

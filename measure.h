@@ -26,17 +26,25 @@
 */
 class Measure {
 private:
+    //code idefing the data
     std::string codename;
+
+    //Readable label discriabing the data
     std::string label;
+
+    //Key = the year for the data | Value = the data
     std::map<unsigned int, double> readings;
 
 public:
+  /*----Constructor----*/
   Measure() = default;
   Measure(std::string code, const std::string &label);
 
+  /*----Setters----*/
   void setLabel(std::string label);
   void setValue(unsigned int key, double value);
 
+  /*----Getters----*/
   double getValue(unsigned int key);
   std::string getLabel() const;
   const std::string getCodename() const;
@@ -44,10 +52,12 @@ public:
   double getDifferenceAsPercentage() const;
   double getAverage() const;
 
+  /*----Misalliance----*/
   unsigned int size() const;
   void merge(Measure measureNew);
   std::string getJSONString() const;
 
+  /*----Overrides----*/
   friend bool operator==(const Measure& lhs, const Measure& rhs);
   friend std::ostream& operator<<(std::ostream& os, const Measure& measure);
 };

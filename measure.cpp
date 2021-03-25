@@ -1,6 +1,3 @@
-
-
-
 /*
   +---------------------------------------+
   | BETH YW? WELSH GOVERNMENT DATA PARSER |
@@ -49,7 +46,6 @@ Measure::Measure(std::string codename, const std::string &label) {
 }
 
 /*
-
   Retrieve the code for the Measure. This function should be callable from a 
   constant context and must promise to not modify the state of the instance or 
   throw an exception.
@@ -70,7 +66,6 @@ const std::string Measure::getCodename() const{
     return this->codename;
 }
 
-
 /*
   Retrieve the human-friendly label for the Measure. This function should be 
   callable from a constant context and must promise to not modify the state of 
@@ -88,11 +83,9 @@ const std::string Measure::getCodename() const{
     ...
     auto label = measure.getLabel();
 */
-
 std::string Measure::getLabel() const {
     return this->label;
 }
-
 
 /*
   Change the label for the Measure.
@@ -109,7 +102,6 @@ std::string Measure::getLabel() const {
 void Measure::setLabel(std::string label) {
     this->label = label;
 }
-
 
 /*
   Retrieve a Measure's value for a given year.
@@ -142,7 +134,6 @@ double Measure::getValue(unsigned int key){
     return this->readings.find(key)->second;
 }
 
-
 /*
   Add a particular year's value to the Measure object. If a value already
   exists for the year, replace it.
@@ -169,9 +160,7 @@ void Measure::setValue(unsigned int key, double value){
     this->readings.insert(std::pair<unsigned int, double>(key,value));
 }
 
-
 /*
-
   Retrieve the number of years data we have for this measure. This function
   should be callable from a constant context and must promise to not change
   the state of the instance or throw an exception.
@@ -192,7 +181,6 @@ unsigned int Measure::size() const{
 }
 
 /*
-
   Calculate the difference between the first and last year imported. This
   function should be callable from a constant context and must promise to not
   change the state of the instance or throw an exception.
@@ -211,9 +199,7 @@ double Measure::getDifference() const{
     return  readings.end()->second - readings.begin()->second;
 }
 
-
 /*
-
   Calculate the difference between the first and last year imported as a 
   percentage. This function should be callable from a constant context and
   must promise to not change the state of the instance or throw an exception.
@@ -234,7 +220,6 @@ double Measure::getDifferenceAsPercentage() const{
     return (getDifference()/readings.begin()->second) * 100;
 }
 
-
 /*
   Calculate the average/mean value for all the values. This function should be
   callable from a constant context and must promise to not change the state of 
@@ -249,7 +234,6 @@ double Measure::getDifferenceAsPercentage() const{
     measure.setValue(2001, 12345679.9);
     auto diff = measure.getAverage(); // returns 12345678.4
 */
-
 double Measure::getAverage() const{
 
     if(readings.size() == 0)
@@ -262,10 +246,7 @@ double Measure::getAverage() const{
     return sum/readings.size();
 }
 
-
 /*
-  TODO: operator<<(os, measure)
-
   Overload the << operator to print all of the Measure's imported data.
 
   We align the year and value outputs by padding the outputs with spaces,
@@ -310,6 +291,7 @@ std::ostream &operator<<(std::ostream &os, const Measure &measure) {
        << measure.getDifference() << measure.getDifferenceAsPercentage() << std::endl;
     return os;
 }
+
 /*
   Overload the == operator for two Measure objects. Two Measure objects
   are only equal when their codename, label and data are all equal.
@@ -324,7 +306,6 @@ std::ostream &operator<<(std::ostream &os, const Measure &measure) {
     true if both Measure objects have the same codename, label and data; false
     otherwise
 */
-
 bool operator==(const Measure& lhs, const Measure& rhs){
     if(lhs.codename != rhs.codename)
         return false;
@@ -335,17 +316,32 @@ bool operator==(const Measure& lhs, const Measure& rhs){
     return lhs.readings == rhs.readings;
 }
 
-/*TODO: write comment*/
+/*
+ * Combineds two Measures. New data replace any data in the old area but data not contained in the new area but in the old
+ * area is kept.
 
+  @param measureNew
+    An Measure object
+
+  @return
+   void
+
+  @example
+    Measure measure1("MYCODE1");
+    Measure measure2("MYCODE1");
+    measure1.merge(measure2);
+*/
 void Measure::merge(Measure measureNew){
     readings.insert(measureNew.readings.begin(), measureNew.readings.end());
 }
 
 /*
- * "pop":{"2015":242316.0,"2016":244462.0,"2017":245480.0,"2018":246466.0},*/
+ * Turns all date in a measure object into
+ * a string that can be turned into a JSONString
+ @return
+    std::string
+*/
 std::string Measure::getJSONString() const{
-    if(readings.size() == 0)
-        return "{}";
 
     std::string out = "\"" + codename + "\" : {";
 
@@ -356,8 +352,10 @@ std::string Measure::getJSONString() const{
         out += reading.second;
         out += ", ";
     }
+
     //removes the last ,
     out = out.substr(0, out.size()-1);
+
     out += "}";
     return out;
 }

@@ -1,6 +1,5 @@
 #ifndef AREA_H_
 #define AREA_H_
-
 /*
   +---------------------------------------+
   | BETH YW? WELSH GOVERNMENT DATA PARSER |
@@ -26,33 +25,42 @@
   An Area object consists of a unique authority code, a container for names
   for the area in any number of different languages, and a container for the
   Measures objects.
-
-
-  or functions you implement here, and perhaps additional operators you may wish
-  to overload.
 */
 class Area {
+
 private:
+    //unique code identifying the area
     std::string localAuthorityCode;
+
+    //key = IOS code for language | Value = name of area in that language
     std::map<std::string, std::string> names;
+
+    //Key = short code representing what data is stored |
+    // Value Measure object with all reading for that key
     std::map<std::string, Measure> measures;
 
 public:
+    /*----Constructors----*/
     Area() = default;
     Area(const std::string& localAuthorityCode);
+
+    /*----Getters----*/
     std::string getLocalAuthorityCode() const;
     std::string getName(const std::string lang) const;
-    void setName(std::string lang, std::string name);
     Measure& getMeasure(const std::string key);
+
+    /*----Setters---*/
+    void setName(std::string lang, std::string name);
     void setMeasure(std::string codename, Measure measure);
+
+    /*----Misalliance---*/
     unsigned int size() const;
     std::string getJSONString() const;
-
-
-    friend bool operator==(const Area& lhs, const Area& rhs);
-    friend std::ostream& operator<<(std::ostream& os, const Area& area);
     void merge(Area areaNew);
 
+    /*----Overrides----*/
+    friend bool operator==(const Area& lhs, const Area& rhs);
+    friend std::ostream& operator<<(std::ostream& os, const Area& area);
 
 };
 

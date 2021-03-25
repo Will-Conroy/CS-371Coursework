@@ -1,6 +1,5 @@
 #ifndef BETHYW_H_
 #define BETHYW_H_
-
 /*
   +---------------------------------------+
   | BETH YW? WELSH GOVERNMENT DATA PARSER |
@@ -10,8 +9,6 @@
 
   This file contains declarations for the helper functions for initialising and
   running Beth Yw?
-
-  functions you need to declare in this file.
  */
 
 #include <string>
@@ -19,7 +16,6 @@
 #include <vector>
 
 #include "lib_cxxopts.hpp"
-
 #include "datasets.h"
 #include "areas.h"
 
@@ -31,7 +27,6 @@ const char DIR_SEP =
 #endif
 
 namespace BethYw {
-
 
 const std::string STUDENT_NUMBER = "976789";
 
@@ -66,9 +61,12 @@ void loadAreas(Areas areas, std::string dir, std::unordered_set<std::string> are
 
 unsigned int validateYear(std::string yearSting);
 
-bool insensitiveEquals(std::string a, std::string b);
+bool insensitiveEquals(std::string const a, std::string const b);
+
 bool filterContains(const StringFilterSet * const filter, std::string value);
+
 std::string convertToLower(const std::string string);
+
 void loadDatasets(Areas areas,
                               std::string dir,
                               std::vector<InputFileSource>  datasetsToImport,
