@@ -314,3 +314,13 @@ std::string Area::getJSONString() const {
     return out;
 }
 
+std::ostream &operator<<(std::ostream &os, const Area &area) {
+    os << area.getName("eng") << '/' << area.getName("cym") << '('
+    << area.getLocalAuthorityCode() << ')' << std::endl;
+    for(auto const& measure : area.measures)
+        os << measure.second;
+    return os;
+
+
+}
+

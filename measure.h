@@ -15,6 +15,7 @@
 
 #include <string>
 #include <map>
+#include <iostream>
 
 /*
   The Measure class contains a measure code, label, and a container for readings
@@ -48,6 +49,7 @@ public:
   std::string getJSONString() const;
 
   friend bool operator==(const Measure& lhs, const Measure& rhs);
+  friend std::ostream& operator<<(std::ostream& os, const Measure& measure);
 };
 
 #endif // MEASURE_H_

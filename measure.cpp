@@ -298,9 +298,18 @@ float Measure::getAverage() const{
 
     measure.setValue(1999, 12345678.9);
     std::cout << measure << std::end;
+    Measure 2 name> (<Measure 2 codename>)
+     <year 1>  <year 2> <year 3> ...  <year n>
+    <value 1>  <year 2> <year 3> ... <value n> <mean 2> <diff 2> <diffp 2>
 */
-
-
+std::ostream &operator<<(std::ostream &os, const Measure &measure) {
+    os << measure.label << '(' << measure.codename << ')' << std::endl;
+    for (auto const &reading : measure.readings)
+        os << reading.second;
+    os << "Average Diff. % Diff." << std::endl << measure.getAverage()
+       << measure.getDifference() << measure.getDifferenceAsPercentage() << std::endl;
+    return os;
+}
 /*
   Overload the == operator for two Measure objects. Two Measure objects
   are only equal when their codename, label and data are all equal.
@@ -325,17 +334,19 @@ bool operator==(const Measure& lhs, const Measure& rhs){
 
     return lhs.readings == rhs.readings;
 }
+
 /*TODO: write comment*/
+
 void Measure::merge(Measure measureNew){
     readings.insert(measureNew.readings.begin(), measureNew.readings.end());
-
-
 }
+
 /*
  * "pop":{"2015":242316.0,"2016":244462.0,"2017":245480.0,"2018":246466.0},*/
 std::string Measure::getJSONString() const{
     if(readings.size() == 0)
         return "{}";
+
     std::string out = "\"" + codename + "\" : {";
 
     for (auto const& reading : readings){

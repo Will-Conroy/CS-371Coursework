@@ -48,8 +48,9 @@ public:
     unsigned int size() const;
     std::string getJSONString() const;
 
-    friend bool operator==(const Area& lhs, const Area& rhs);
 
+    friend bool operator==(const Area& lhs, const Area& rhs);
+    friend std::ostream& operator<<(std::ostream& os, const Area& area);
     void merge(Area areaNew);
 
 

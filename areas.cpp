@@ -19,14 +19,12 @@
 */
 
 #include <stdexcept>
-#include <iostream>
 #include <string>
 #include <stdexcept>
 #include <tuple>
 #include <unordered_set>
 
 #include "lib_json.hpp"
-
 #include "datasets.h"
 #include "areas.h"
 #include "measure.h"
@@ -754,7 +752,11 @@ std::string Areas::toJSON() const {
     Areas areas();
     std::cout << areas << std::end;
 */
-
+std::ostream &operator<<(std::ostream &os, const Areas &areas){
+    for(auto const& area : areas.areas)
+        os << std::get<1>(area);
+    return os;
+}
 
 std::string Areas::getVerableCSV(std::string& line){
     if(line.find(",") == std::string::npos){
@@ -765,5 +767,4 @@ std::string Areas::getVerableCSV(std::string& line){
     line = line.erase (0,pos+1);
     return out;
 }
-
 
