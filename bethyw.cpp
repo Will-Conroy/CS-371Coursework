@@ -297,7 +297,7 @@ std::unordered_set<std::string> BethYw::parseMeasuresArg(cxxopts::ParseResult& a
 }
 
 /*
- * TODO: ADD comments
+ *
   Parse the years command line argument. Years is either a four digit year 
   value, or two four digit year values separated by a hyphen (i.e. either 
   YYYY or YYYY-ZZZZ).
@@ -476,4 +476,8 @@ std::string BethYw::convertToLower(const std::string string) {
         lower += std::tolower(string[i]);
     }
     return lower;
+}
+
+bool BethYw::filterContains(const StringFilterSet * const filter, std::string value){
+    return filter->find(value) != filter->end();
 }

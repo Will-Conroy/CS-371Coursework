@@ -28,6 +28,8 @@
 #include "datasets.h"
 #include "areas.h"
 #include "measure.h"
+#include "datasets.h"
+#include "bethyw.h"
 
 /*
   An alias for the imported JSON parsing library.
@@ -196,10 +198,8 @@ void Areas::populateFromAuthorityCodeCSV(
     bool all = false;
     if(areasFilter == nullptr || areasFilter->empty())
         all = true;
-
     while (std::getline(is, line)) {
         std::string code = getVerableCSV(line);
-
         if( all || areasFilter->find(code) != areasFilter->end()){
             Area temp(code);
             temp.setName("eng", getVerableCSV(line));
@@ -318,8 +318,45 @@ void Areas::populateFromWelshStatsJSON(std::istream &is,
             const StringFilterSet * const areasFilter,
             const StringFilterSet * const measuresFilter,
             const YearFilterTuple * const yearsFilter){
-throw std::runtime_error("Some little cunt call Will didn't implement Areas::populateFromWelshStatsJSON");
 
+    //get years for readabilty
+    unsigned int yearStart = std::get<0>(*yearsFilter);
+    unsigned int yearEnd = std::get<1>(*yearsFilter);
+
+    //moved nullptr to left for small efficay
+    bool allAreas = areasFilter == nullptr || areasFilter->empty();
+    bool allMeasures = areasFilter == nullptr || measuresFilter->empty();
+    bool allYears = yearsFilter == nullptr ||(yearStart == 0 && yearEnd == 0);
+
+    json j;
+    is >> j;
+
+    for (auto& el : j["value"].items()) {
+        auto &data = el.value();
+        std::string localAuthorityCode = data[cols.at(BethYw::SourceColumn::AUTH_CODE)];
+
+        //area in not already store and it in the filter or we are imporating them all
+        if(allAreas || BethYw::filterContains(areasFilter, localAuthorityCode)){
+            if(areas.find(localAuthorityCode) == areas.end()){
+                Area temp = Area(localAuthorityCode);
+                temp.setName("eng", data[cols.at(BethYw::SourceColumn::AUTH_NAME_ENG)]);
+                areas.insert({localAuthorityCode, temp});
+            }
+            std::string lowerMeasureCode = BethYw::convertToLower(data[cols.at(BethYw::SourceColumn::MEASURE_CODE)]);
+            if(allMeasures || BethYw::filterContains(measuresFilter, lowerMeasureCode)){
+                std::string measureCode = data[cols.at(BethYw::SourceColumn::MEASURE_CODE)];
+                double reading = data["Data"];
+                Measure measure = Measure(measureCode, data[cols.at(BethYw::SourceColumn::MEASURE_NAME)]);
+
+                //turns the year string into unsigned int and happened to do some small validation
+                unsigned int year = BethYw::validateYear(data[cols.at(BethYw::SourceColumn::YEAR)]);
+
+                if(allYears || (year >= yearStart && year <= yearEnd))
+                    measure.setValue(year, reading);
+                areas.at(localAuthorityCode).setMeasure(measureCode,measure);
+            }
+        }
+    }
 }
 
 /*
@@ -461,13 +498,6 @@ void Areas::populate(std::istream &is,
 }
 
 /*
-  TODO: Areas::populate(is,
-                        type,
-                        cols,
-                        areasFilter,
-                        measuresFilter,
-                        yearsFilter)
-
   Parse data from an standard input stream, that is of a particular type,
   and with a given column mapping, filtering for specific areas, measures,
   and years, and fill the container.
@@ -757,6 +787,22 @@ std::ostream &operator<<(std::ostream &os, const Areas &areas){
         os << std::get<1>(area);
     return os;
 }
+
+/*
+  Retrieve string form the head of CSV line, and then delete it's form that
+  line.
+
+  @param line
+    A refeance to a CSV line
+
+  @return
+    std::string
+
+  @example
+    std::string line = "give,me,100%,please";
+    std::string give = area.getVerableCSV(line);
+    //line = "me,100%,please"; - now
+*/
 
 std::string Areas::getVerableCSV(std::string& line){
     if(line.find(",") == std::string::npos){

@@ -136,9 +136,9 @@ void Measure::setLabel(std::string label) {
     ...
     auto value = measure.getValue(1999); // returns 12345678.9
 */
-float Measure::getValue(unsigned int key){
+double Measure::getValue(unsigned int key){
     if(this->readings.find(key) == this->readings.end())
-        throw std::out_of_range("Unknown year");
+        throw std::out_of_range("No value found for year " + std::to_string(key));
     return this->readings.find(key)->second;
 }
 
@@ -163,10 +163,10 @@ float Measure::getValue(unsigned int key){
 
     measure.setValue(1999, 12345678.9);
 */
-void Measure::setValue(unsigned int key, float value){
+void Measure::setValue(unsigned int key, double value){
     if(this->readings.find(key) != this->readings.end())
         this->readings.find(key)->second = value;
-    this->readings.insert(std::pair<unsigned int, float>(key,value));
+    this->readings.insert(std::pair<unsigned int, double>(key,value));
 }
 
 
@@ -207,7 +207,7 @@ unsigned int Measure::size() const{
     measure.setValue(2001, 12345679.9);
     auto diff = measure.getDifference(); // returns 1.0
 */
-float Measure::getDifference() const{
+double Measure::getDifference() const{
     return  readings.end()->second - readings.begin()->second;
 }
 
@@ -228,7 +228,7 @@ float Measure::getDifference() const{
     measure.setValue(2010, 12345679.9);
     auto diff = measure.getDifferenceAsPercentage();
 */
-float Measure::getDifferenceAsPercentage() const{
+double Measure::getDifferenceAsPercentage() const{
     if(getDifference() == 0)
         return 0;
     return (getDifference()/readings.begin()->second) * 100;
@@ -250,12 +250,12 @@ float Measure::getDifferenceAsPercentage() const{
     auto diff = measure.getAverage(); // returns 12345678.4
 */
 
-float Measure::getAverage() const{
+double Measure::getAverage() const{
 
     if(readings.size() == 0)
         return 0;
 
-    float sum = 0;
+    double sum = 0;
     for (auto const& reading : readings)
         sum += reading.second;
 

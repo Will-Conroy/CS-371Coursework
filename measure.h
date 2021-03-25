@@ -28,21 +28,21 @@ class Measure {
 private:
     std::string codename;
     std::string label;
-    std::map<unsigned int, float> readings;
+    std::map<unsigned int, double> readings;
 
 public:
   Measure() = default;
   Measure(std::string code, const std::string &label);
 
   void setLabel(std::string label);
-  void setValue(unsigned int key, float value);
+  void setValue(unsigned int key, double value);
 
-  float getValue(unsigned int key);
+  double getValue(unsigned int key);
   std::string getLabel() const;
   const std::string getCodename() const;
-  float getDifference() const;
-  float getDifferenceAsPercentage() const;
-  float getAverage() const;
+  double getDifference() const;
+  double getDifferenceAsPercentage() const;
+  double getAverage() const;
 
   unsigned int size() const;
   void merge(Measure measureNew);

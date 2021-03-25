@@ -21,8 +21,6 @@
         |         objects.
         |
         +-> Areas A class that contains all Area objects.
-
-  TODO: Read the block comments with TODO in areas.cpp to know which 
   functions and member variables you need to declare in this class.
  */
 
@@ -33,7 +31,6 @@
 #include <unordered_set>
 #include "datasets.h"
 #include "area.h"
-
 /*
   An alias for filters based on strings such as categorisations e.g. area,
   and measures.
@@ -48,7 +45,6 @@ using YearFilterTuple = std::tuple<unsigned int, unsigned int>;
 /*
   An alias for the data within an Areas object stores Area objects.
 
-  TODO: you should remove the declaration of the Null class below, and set
   AreasContainer to a valid Standard Library container of your choosing.
 */
 
@@ -64,9 +60,6 @@ using AreasContainer = std::map<std::string, Area>;
   specific parsing of code to other functions, based on the value of 
   BethYw::SourceDataType.
 
-  TODO: Based on your implementation, there may be additional constructors
-  or functions you implement here, and perhaps additional operators you may wish
-  to overload.
 */
 class Areas {
 private:
