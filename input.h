@@ -50,7 +50,7 @@ public:
 class InputFile : public InputSource {
 public:
   InputFile(const std::string& filePath);
-  std::istream& open();
+  std::istream& open() noexcept(false);
 };
 
 #endif // INPUT_H_

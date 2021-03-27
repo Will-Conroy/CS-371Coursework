@@ -373,7 +373,12 @@ void Areas::populateFromAuthorityByYearCSV(std::istream &is,
                                        const StringFilterSet * const areasFilter,
                                        const StringFilterSet * const measuresFilter,
                                        const YearFilterTuple * const yearsFilter){
-    throw std::runtime_error("Some little cunt call Will didn't implement Areas::populateFromAuthorityByYearCSV");
+    if(is.good()){
+        //reading first verable which is just AuthorityCode
+        std::string line;
+        std::getline(is,line);
+        getVariableCSV(line);
+    }
 }
 
 /*
@@ -641,7 +646,8 @@ std::string Areas::toJSON() const {
 */
 std::ostream &operator<<(std::ostream &os, const Areas &areas){
     for(auto const& area : areas.areas)
-        os << std::get<1>(area);
+        os << area.second;
+
     return os;
 }
 
@@ -662,6 +668,7 @@ std::ostream &operator<<(std::ostream &os, const Areas &areas){
 */
 
 std::string Areas::getVariableCSV(std::string& line){
+
     if(line.find(",") == std::string::npos)
         return line;
 

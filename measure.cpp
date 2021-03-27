@@ -15,6 +15,7 @@
 #include <stdexcept>
 #include <string>
 #include <numeric>
+#include <iomanip>
 
 #include "measure.h"
 #include "bethyw.h"
@@ -196,7 +197,11 @@ unsigned int Measure::size() const{
     auto diff = measure.getDifference(); // returns 1.0
 */
 double Measure::getDifference() const{
-    return  readings.end()->second - readings.begin()->second;
+    double last = 0;
+    for(auto const& reading :readings)
+        last = reading.second;
+
+    return  (last - readings.begin()->second);
 }
 
 /*
@@ -217,7 +222,7 @@ double Measure::getDifference() const{
 double Measure::getDifferenceAsPercentage() const{
     if(getDifference() == 0)
         return 0;
-    return (getDifference()/readings.begin()->second) * 100;
+    return ((getDifference()/readings.begin()->second) * 100);
 }
 
 /*
@@ -243,7 +248,7 @@ double Measure::getAverage() const{
     for (auto const& reading : readings)
         sum += reading.second;
 
-    return sum/readings.size();
+    return (sum/readings.size());
 }
 
 /*
@@ -284,11 +289,15 @@ double Measure::getAverage() const{
     <value 1>  <year 2> <year 3> ... <value n> <mean 2> <diff 2> <diffp 2>
 */
 std::ostream &operator<<(std::ostream &os, const Measure &measure) {
-    os << measure.label << '(' << measure.codename << ')' << std::endl;
+    std::string tab = "    ";
+    os << measure.label << tab << '(' << measure.codename << ')' << std::endl;
     for (auto const &reading : measure.readings)
-        os << reading.second;
-    os << "Average Diff. % Diff." << std::endl << measure.getAverage()
-       << measure.getDifference() << measure.getDifferenceAsPercentage() << std::endl;
+        os << tab << reading.first;
+    os << tab << "Average" << tab << "Diff." << tab <<" % Diff." << std::endl;
+    for (auto const &reading : measure.readings)
+        os << std::to_string(reading.second) << ' ';
+    os << std::to_string(measure.getAverage()) << tab << std::to_string(measure.getDifference()) << tab
+    << std::to_string(measure.getDifferenceAsPercentage()) << std::endl;
     return os;
 }
 

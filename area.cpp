@@ -232,8 +232,12 @@ unsigned int Area::size() const{
     std::cout << area << std::endl;
 */
 std::ostream &operator<<(std::ostream &os, const Area &area) {
+
+
     os << area.getName("eng") << " / " << area.getName("cym") << '('
        << area.getLocalAuthorityCode() << ')' << std::endl;
+    if(area.measures.empty())
+        os << "<no measures>" << std::endl<< std::endl;
     for(auto const& measure : area.measures)
         os << measure.second;
     return os;
@@ -321,7 +325,7 @@ std::string Area::getJSONString() const {
     }
     //removes the last ,
     out = out.substr(0, out.size()-1);
-    out += "}, \"measures\": {";
+    out += "}, \"measures\": ";
     for (auto const& measure : measures){
         out += measure.second.getJSONString();
     }

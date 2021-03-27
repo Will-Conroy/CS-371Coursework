@@ -57,7 +57,7 @@ std::unordered_set<std::string> parseMeasuresArg(cxxopts::ParseResult& args);
 
 std::tuple<unsigned int, unsigned int> parseYearsArg(cxxopts::ParseResult& args);
 
-void loadAreas(Areas areas, std::string dir, std::unordered_set<std::string> areasFilter);
+void loadAreas(Areas &areas, std::string dir, std::unordered_set<std::string> areasFilter);
 
 unsigned int validateYear(std::string yearSting);
 
@@ -67,13 +67,15 @@ bool filterContains(const StringFilterSet * const filter, std::string value);
 
 std::string convertToLower(const std::string string);
 
-void loadDatasets(Areas areas,
+void loadDatasets(Areas &areas,
                               std::string dir,
                               std::vector<InputFileSource>  datasetsToImport,
-                              const std::unordered_set<std::string> areasFilter,
-                              const std::unordered_set<std::string> measuresFilter,
-                              const std::tuple<unsigned int, unsigned int>& yearsFilter);
+                              const StringFilterSet areasFilter,
+                              const StringFilterSet  measuresFilter,
+                              const YearFilterTuple  yearsFilter) noexcept(false);
 
+
+std::string getVariableCSV(std::string& line);
 } // namespace BethYw
 
 #endif // BETHYW_H_

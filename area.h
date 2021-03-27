@@ -32,11 +32,11 @@ private:
     //unique code identifying the area
     std::string localAuthorityCode;
 
-    //key = IOS code for language | Value = name of area in that language
+    //key = IOS code for language | Value = name for that area in that language
     std::map<std::string, std::string> names;
 
     //Key = short code representing what data is stored |
-    // Value Measure object with all reading for that key
+    // Value = Measure object with all reading for that key
     std::map<std::string, Measure> measures;
 
 public:

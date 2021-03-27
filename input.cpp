@@ -13,6 +13,7 @@
  */
 
 #include "input.h"
+#include <iostream>
 
 /*
   Constructor for an InputSource.
@@ -60,7 +61,7 @@ InputFile::InputFile(const std::string& filePath) : InputSource(filePath){}
 std::istream& InputFile::open(){
     std::istream* fileStream = new std::ifstream(InputFile::getSource());
     if(!(fileStream->good())){
-        throw (std::runtime_error("InputFile::open: Failed to open file " + InputFile::getSource()));
+            throw std::runtime_error("InputFile::open: Failed to open file " + InputFile::getSource());
     }
     return *fileStream;
 }
