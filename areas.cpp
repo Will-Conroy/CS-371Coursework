@@ -286,18 +286,36 @@ void Areas::populateFromWelshStatsJSON(std::istream &is,
                 areas.insert({localAuthorityCode, temp});
             }
 
-            std::string lowerMeasureCode = BethYw::convertToLower(data[cols.at(BethYw::SourceColumn::MEASURE_CODE)]);
-            if(allMeasures || BethYw::filterContains(measuresFilter, lowerMeasureCode)){
-                std::string measureCode = data[cols.at(BethYw::SourceColumn::MEASURE_CODE)];
+            std::string measureCode;
+            std::string lMeasureCode;
+
+            try{
+                measureCode = data[cols.at(BethYw::SourceColumn::MEASURE_CODE)];
+                lMeasureCode = BethYw::convertToLower(measureCode);
+            }catch(const std::out_of_range& error){
+                measureCode = BethYw::SourceColumn::MEASURE_CODE;
+                lMeasureCode = measureCode;
+            }
+
+            if(allMeasures || BethYw::filterContains(measuresFilter, lMeasureCode)){
+                std::string measureCode = measureCode;
                 double reading;
                 try{
-                    reading = data["Data"];
+                    reading = data[cols.at(BethYw::SourceColumn::VALUE)];
                 }catch(const nlohmann::detail::type_error& error){
-                    std::string temp = data["Data"];
+                    std::string temp = data[cols.at(BethYw::SourceColumn::VALUE)];
                     reading = std::stod(temp);
                 }
 
-                Measure measure = Measure(measureCode, data[cols.at(BethYw::SourceColumn::MEASURE_NAME)]);
+                std::string measureName;
+
+                try{
+                    measureName = data[cols.at(BethYw::SourceColumn::MEASURE_NAME)];
+                }catch(const std::out_of_range& error){
+                    measureName = BethYw::SourceColumn::MEASURE_NAME;
+                }
+
+                Measure measure = Measure(measureCode, measureName);
 
                 //turns the year string into unsigned int and happened to do some small validation
                 unsigned int year = BethYw::validateYear(data[cols.at(BethYw::SourceColumn::YEAR)]);
@@ -311,6 +329,10 @@ void Areas::populateFromWelshStatsJSON(std::istream &is,
 }
 
 /*
+  TODO: Areas::populateFromAuthorityByYearCSV(is,
+                                              cols,
+                                              areasFilter,
+                                              yearFilter)
 
   This function imports CSV files that contain a single measure. The 
   CSV file consists of columns containing the authority code and years.
