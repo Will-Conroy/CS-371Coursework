@@ -28,6 +28,7 @@
 #include <tuple>
 #include <map>
 #include <unordered_set>
+#include <vector>
 #include "datasets.h"
 #include "area.h"
 

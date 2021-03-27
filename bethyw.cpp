@@ -333,6 +333,8 @@ std::unordered_set<std::string> BethYw::parseMeasuresArg(cxxopts::ParseResult& a
 
 std::tuple<unsigned int, unsigned int> BethYw::parseYearsArg(cxxopts::ParseResult& args){
     // Retrieve the areas argument like so:
+    if(args.count("years") == 0)
+        return std::tuple<unsigned int, unsigned int> {0,0};
     auto yearsArgs = args["years"].as<std::string>();
     if(yearsArgs.empty()){
         return std::make_tuple(0,0);
@@ -531,7 +533,7 @@ unsigned int BethYw::validateYear(std::string yearSting){
 
     unsigned int year = std::stoi(yearSting);
 
-    if ( year >= 2021 || year < 1000)
+    if ( year >= 2021)
         throw (std::invalid_argument("Invalid input for years argument"));
 
     return year;

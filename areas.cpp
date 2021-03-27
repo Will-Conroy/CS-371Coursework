@@ -18,13 +18,13 @@
 #include <tuple>
 #include <unordered_set>
 
-#include "lib_json.hpp"
+
 #include "datasets.h"
 #include "areas.h"
 #include "measure.h"
 #include "datasets.h"
 #include "bethyw.h"
-
+#include "lib_json.hpp"
 /*
   An alias for the imported JSON parsing library.
 */
@@ -289,7 +289,14 @@ void Areas::populateFromWelshStatsJSON(std::istream &is,
             std::string lowerMeasureCode = BethYw::convertToLower(data[cols.at(BethYw::SourceColumn::MEASURE_CODE)]);
             if(allMeasures || BethYw::filterContains(measuresFilter, lowerMeasureCode)){
                 std::string measureCode = data[cols.at(BethYw::SourceColumn::MEASURE_CODE)];
-                double reading = data["Data"];
+                double reading;
+                try{
+                    reading = data["Data"];
+                }catch(const nlohmann::detail::type_error& error){
+                    std::string temp = data["Data"];
+                    reading = std::stod(temp);
+                }
+
                 Measure measure = Measure(measureCode, data[cols.at(BethYw::SourceColumn::MEASURE_NAME)]);
 
                 //turns the year string into unsigned int and happened to do some small validation
@@ -304,10 +311,6 @@ void Areas::populateFromWelshStatsJSON(std::istream &is,
 }
 
 /*
-  TODO: Areas::populateFromAuthorityByYearCSV(is,
-                                              cols,
-                                              areasFilter,
-                                              yearFilter)
 
   This function imports CSV files that contain a single measure. The 
   CSV file consists of columns containing the authority code and years.
@@ -373,11 +376,47 @@ void Areas::populateFromAuthorityByYearCSV(std::istream &is,
                                        const StringFilterSet * const areasFilter,
                                        const StringFilterSet * const measuresFilter,
                                        const YearFilterTuple * const yearsFilter){
-    if(is.good()){
+
+    auto dataCode = cols.at(BethYw::SourceColumn::SINGLE_MEASURE_CODE);
+    auto dataName = cols.at(BethYw::SourceColumn::SINGLE_MEASURE_NAME);
+    bool allMeasures = measuresFilter == nullptr || measuresFilter->empty();
+
+    if(is.good() && (allMeasures || BethYw::filterContains(measuresFilter, dataCode))){
+        //get years for readability
+        unsigned int yearStart = std::get<0>(*yearsFilter);
+        unsigned int yearEnd = std::get<1>(*yearsFilter);
+
+        bool allAreas = areasFilter == nullptr || areasFilter->empty();
+        bool allYears = yearsFilter == nullptr ||(yearStart == 0 && yearEnd == 0);
+
+
         //reading first verable which is just AuthorityCode
         std::string line;
         std::getline(is,line);
         getVariableCSV(line);
+        std::vector<unsigned int> years;
+        //gets all the years at the top
+        while(!(line.empty())) {
+            years.push_back(std::stol(getVariableCSV(line)));
+        }
+
+        while(std::getline(is, line)){
+            std::string localAuthCode = getVariableCSV(line);
+            if(allAreas || BethYw::filterContains(areasFilter, localAuthCode)){
+                Measure measure(dataCode,dataName);
+                for(auto const& year : years){
+                    if(allYears || (year >= yearStart && year <= yearEnd)){
+                        measure.setValue(year,std::stod(getVariableCSV(line)));
+                    }else{
+                        getVariableCSV(line);
+                    }
+                    Area tempArea(localAuthCode);
+                    tempArea.setMeasure(dataCode, measure);
+                    setArea(localAuthCode, tempArea);
+                }
+            }
+        }
+
     }
 }
 
@@ -614,13 +653,12 @@ void Areas::populate(
 */
 std::string Areas::toJSON() const {
   json j;
-  std::string jsonString = "{";
 
   for (auto const& area : areas)
-      jsonString += area.second.getJSONString();
+      j[area.second.getLocalAuthorityCode()] = json::parse(area.second.toJSON());
 
-  jsonString += "}";
-  j = json::parse(jsonString);
+  if(j.dump() == "null")
+      return "{}";
 
   return j.dump();
 }
@@ -647,7 +685,6 @@ std::string Areas::toJSON() const {
 std::ostream &operator<<(std::ostream &os, const Areas &areas){
     for(auto const& area : areas.areas)
         os << area.second;
-
     return os;
 }
 
@@ -669,8 +706,13 @@ std::ostream &operator<<(std::ostream &os, const Areas &areas){
 
 std::string Areas::getVariableCSV(std::string& line){
 
-    if(line.find(",") == std::string::npos)
-        return line;
+    if(line.find(",") == std::string::npos){
+        std::string out = line;
+        line = "";
+        return out;
+    }
+
+
 
     std::size_t pos = line.find(",");
     std::string out = line.substr(0,pos);

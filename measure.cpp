@@ -19,6 +19,13 @@
 
 #include "measure.h"
 #include "bethyw.h"
+#include "lib_json.hpp"
+
+
+/*
+  An alias for the imported JSON parsing library.
+*/
+using json = nlohmann::json;
 
 /*
   Construct a single Measure, that has values across many years.
@@ -197,11 +204,7 @@ unsigned int Measure::size() const{
     auto diff = measure.getDifference(); // returns 1.0
 */
 double Measure::getDifference() const{
-    double last = 0;
-    for(auto const& reading :readings)
-        last = reading.second;
-
-    return  (last - readings.begin()->second);
+    return  ( readings.rbegin()->second - readings.begin()->second);
 }
 
 /*
@@ -350,22 +353,11 @@ void Measure::merge(Measure measureNew){
  @return
     std::string
 */
-std::string Measure::getJSONString() const{
+std::string Measure::toJSON() const{
+    json j;
+    for (auto const& reading : readings)
+        j[std::to_string(reading.first)] = reading.second;
 
-    std::string out = "\"" + codename + "\" : {";
-
-    for (auto const& reading : readings){
-
-        out += "\"" + reading.first;
-        out += "\" :";
-        out += reading.second;
-        out += ", ";
-    }
-
-    //removes the last ,
-    out = out.substr(0, out.size()-1);
-
-    out += "}";
-    return out;
+    return j.dump();
 }
 

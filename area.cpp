@@ -19,6 +19,10 @@
 #include "lib_json.hpp"
 
 /*
+  An alias for the imported JSON parsing library.
+*/
+using json = nlohmann::json;
+/*
   Construct an Area with a given local authority code.
 
   @param localAuthorityCode
@@ -233,7 +237,6 @@ unsigned int Area::size() const{
 */
 std::ostream &operator<<(std::ostream &os, const Area &area) {
 
-
     os << area.getName("eng") << " / " << area.getName("cym") << '('
        << area.getLocalAuthorityCode() << ')' << std::endl;
     if(area.measures.empty())
@@ -318,19 +321,16 @@ void Area::merge(Area areaNew){
                                              …
                                             "<yearN>": <valueN> }
                                }*/
-std::string Area::getJSONString() const {
-    std::string out = "\"" + localAuthorityCode + "\" : {\"names\": {";
-    for (auto const& name : names){
-        out += "\"" + name.first + "\" : \""  + name.second + "\", ";
+std::string Area::toJSON() const {
+    json j;
+
+    for (auto const& name : names)
+        j["names"][name.first] = name.second;
+
+    for (auto const& measure : measures) {
+            j["measures"][measure.first] = json::parse(measure.second.toJSON());
     }
-    //removes the last ,
-    out = out.substr(0, out.size()-1);
-    out += "}, \"measures\": ";
-    for (auto const& measure : measures){
-        out += measure.second.getJSONString();
-    }
-    out += "}";
-    return out;
+    return j.dump();
 }
 
 

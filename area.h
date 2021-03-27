@@ -53,14 +53,15 @@ public:
     void setName(std::string lang, std::string name);
     void setMeasure(std::string codename, Measure measure);
 
-    /*----Misalliance---*/
+    /*----Miscellaneous---*/
     unsigned int size() const;
-    std::string getJSONString() const;
+    std::string toJSON() const;
     void merge(Area areaNew);
 
     /*----Overrides----*/
     friend bool operator==(const Area& lhs, const Area& rhs);
     friend std::ostream& operator<<(std::ostream& os, const Area& area);
+
 
 };
 

@@ -52,10 +52,10 @@ public:
   double getDifferenceAsPercentage() const;
   double getAverage() const;
 
-  /*----Misalliance----*/
+  /*----Miscellaneous----*/
   unsigned int size() const;
   void merge(Measure measureNew);
-  std::string getJSONString() const;
+  std::string toJSON() const;
 
   /*----Overrides----*/
   friend bool operator==(const Measure& lhs, const Measure& rhs);
