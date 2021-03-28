@@ -24,7 +24,7 @@
 InputSource::InputSource(const std::string& source): source(source){}
 
 /*
-  This function should be callable from a constant context.
+  This function is callable from a constant context.
 
   @return
     A non-modifable value for the source passed into the construtor.

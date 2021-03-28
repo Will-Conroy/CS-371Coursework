@@ -332,9 +332,11 @@ std::unordered_set<std::string> BethYw::parseMeasuresArg(cxxopts::ParseResult& a
 */
 
 std::tuple<unsigned int, unsigned int> BethYw::parseYearsArg(cxxopts::ParseResult& args){
-    // Retrieve the areas argument like so:
+
+
     if(args.count("years") == 0)
         return std::tuple<unsigned int, unsigned int> {0,0};
+
     auto yearsArgs = args["years"].as<std::string>();
     if(yearsArgs.empty()){
         return std::make_tuple(0,0);
@@ -452,21 +454,15 @@ void BethYw::loadDatasets(Areas &areas,
                           const StringFilterSet measuresFilter,
                           const YearFilterTuple yearsFilter){
 
-
         for(auto const& dataset : datasetsToImport) {
-            const SourceDataType & type = dataset.PARSER;
-            const SourceColumnMapping & cols = dataset.COLS;
             InputFile areasFile(dir + dataset.FILE);
             try{
-                areas.populate(areasFile.open(), type, cols, &areasFilter, &measuresFilter, &yearsFilter);
+                areas.populate(areasFile.open(), dataset.PARSER, dataset.COLS, &areasFilter, &measuresFilter, &yearsFilter);
             }catch(const std::runtime_error & error) {
                 std::cerr << "Error importing dataset: " << std::endl << error.what();
                 exit(0);
             }
         }
-
-
-
 }
 
 /*
@@ -555,29 +551,7 @@ unsigned int BethYw::validateYear(std::string yearSting){
  */
 std::string BethYw::convertToLower(const std::string string) {
     std::string lower = "";
-
     for (unsigned i = 0; i < string.size(); i++)
         lower += std::tolower(string[i]);
-
     return lower;
-}
-
-/*
- * Checks if a value is in a StringFilterSet
-
-  @param filter
-    StringFilterSet
-
-  @param value
-    std::string
-
-  @return
-    bool
-
-  @example
-    StringFilterSet baconFilter;
-    bool = BethYw::filterContains(baconFilter, "Smoked Bacon");
- */
-bool BethYw::filterContains(const StringFilterSet * const filter, std::string value){
-    return filter->find(value) != filter->end();
 }

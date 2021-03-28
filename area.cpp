@@ -50,7 +50,7 @@ std::string Area::getLocalAuthorityCode() const {
 }
 
 /*
-  Get a name for the Area in a specific language.  This function should be 
+  Get a name for the Area in a specific language.  This function is
   callable from a constant context and not modify the state of the instance.
 
   @param lang
@@ -72,9 +72,12 @@ std::string Area::getLocalAuthorityCode() const {
     auto name = area.getName(langCode);
 */
  std::string Area::getName(const std::string lang) const{
+
     std::string lower = BethYw::convertToLower(lang);
+
     if(names.find(lang) == names.end())
         throw (std::out_of_range("No known lang"));
+
     return names.find(lang)->second;
 }
 
@@ -106,15 +109,15 @@ void Area::setName(std::string lang, std::string name){
         throw std::invalid_argument("Area::setName: Language code must be three alphabetical letters only");
     }
     for(char& c : lang) {
-        if(!isalpha(c)){
+        if(!isalpha(c))
             throw std::invalid_argument("Area::setName: Language code must be three alphabetical letters only");
-        }
     }
+
     this->names.insert( std::pair<std::string, std::string>(BethYw::convertToLower(lang),name));
 }
 
 /*
-  Retrieve a Measure object, given its codename. This function should be case
+  Retrieve a Measure object, given its codename. This function is case
   insensitive when searching for a measure.
 
   @param key
@@ -136,19 +139,22 @@ void Area::setName(std::string lang, std::string name){
     auto measure2 = area.getMeasure("pop");
 */
 Measure& Area::getMeasure(const std::string key) {
+
     if(measures.find(BethYw::convertToLower(key)) == measures.end())
         throw std::out_of_range("No measure found matching " + key);
+
     return measures.at(key);
 }
 
 /*
-  Add a particular Measure to this Area object. Note that the Measure's
-  codename should be converted to lowercase.
+  Add a particular Measure to this Area object.
 
   If a Measure already exists with the same codename in this Area, overwrite any
   values contained within the existing Measure with those in the new Measure
   passed into this function. The resulting Measure stored inside the Area
   instance should be a combination of the two Measures instances.
+
+  Note that the Measure's codename are be converted to lowercase.
 
   @param codename
     The codename for the Measure
@@ -182,7 +188,7 @@ void Area::setMeasure(std::string codename, Measure measure){
 }
 
 /*
-  Retrieve the number of Measures we have for this Area. This function should be 
+  Retrieve the number of Measures we have for this Area. This function is
   callable from a constant context, not modify the state of the instance, and
   must promise not throw an exception.
 
@@ -216,10 +222,8 @@ unsigned int Area::size() const{
   If the Area only has only one name, output this. If the area has no names,
   output the name "Unnamed".
 
-  Measures should be ordered by their Measure codename. If there are no measures
+  Measures are ordered by their Measure codename. If there are no measures
   output the line "<no measures>" after you have output the area names.
-
-  See the coursework specification for more examples.
 
   @param os
     The output stream to write to
@@ -239,10 +243,13 @@ std::ostream &operator<<(std::ostream &os, const Area &area) {
 
     os << area.getName("eng") << " / " << area.getName("cym") << '('
        << area.getLocalAuthorityCode() << ')' << std::endl;
+
     if(area.measures.empty())
-        os << "<no measures>" << std::endl<< std::endl;
+        os << "<no measures>" << std::endl << std::endl;
+
     for(auto const& measure : area.measures)
         os << measure.second;
+
     return os;
 }
 
@@ -278,13 +285,11 @@ bool operator==(const Area& lhs, const Area& rhs){
 }
 
 /*
- * Combineds two areas. New data replace any data in the old area but data not contained in the new area but in the old
+ * Combinds two areas. New data replace any data in the old area but data not contained in the new area but in the old
  * area is kept.
 
   @param areaNew
     An Area object
-
-
 
   @return
    void
@@ -299,37 +304,36 @@ void Area::merge(Area areaNew){
     measures.insert(areaNew.measures.begin(), areaNew.measures.end());
     names.insert(areaNew.names.begin(), areaNew.names.end());
 }
-
 /*
- *"<localAuthorityCode1>" : {
-                              "names": { "<languageCode1>": "<languageName1>",
-                                         "<languageCode2>": "<languageName2>"
-                                         …
-                                         "<languageCodeN>": "<languageNameN>" },
-                              "measures" : { "<year1>": <value1>,
-                                             "<year2>": <value2>,
-                                             …
-                                            "<yearN>": <valueN> }
-                               },
-    "<localAuthorityCode2>" : {
-                              "names": { "<languageCode1>": "<languageName1>",
-                                         "<languageCode2>": "<languageName2>"
-                                         …
-                                         "<languageCodeN>": "<languageNameN>" },
-                              "measures" : { "<year1>": <value1>,
-                                             "<year2>": <value2>,
-                                             …
-                                            "<yearN>": <valueN> }
-                               }*/
+  Convert this Area object, and the Measure instances within those, to a JSON string.
+  (https://github.com/nlohmann/json) for more info
+
+  @return
+    std::string of JSON
+
+  @example
+    InputFile input("data/popu1009.json");
+    auto is = input.open();
+
+    auto cols = InputFiles::DATASETS["popden"].COLS;
+
+    auto areasFilter = BethYw::parseAreasArg();
+    auto measuresFilter = BethYw::parseMeasuresArg();
+    auto yearsFilter = BethYw::parseMeasuresArg();
+
+    Areas data = Areas();
+    std::cout << data.toJSON();
+*/
+
 std::string Area::toJSON() const {
     json j;
 
     for (auto const& name : names)
         j["names"][name.first] = name.second;
 
-    for (auto const& measure : measures) {
-            j["measures"][measure.first] = json::parse(measure.second.toJSON());
-    }
+    for (auto const& measure : measures)
+        j["measures"][measure.first] = json::parse(measure.second.toJSON());
+
     return j.dump();
 }
 

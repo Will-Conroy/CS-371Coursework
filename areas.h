@@ -28,8 +28,10 @@
 #include <tuple>
 #include <map>
 #include <unordered_set>
+#include <vector>
 #include "datasets.h"
 #include "area.h"
+
 
 /*
   An alias for filters based on strings such as categorisations e.g. area,
@@ -105,11 +107,13 @@ public:
                                                const StringFilterSet * const measuresFilter,
                                                const YearFilterTuple * const yearsFilter) noexcept(false);
 
-  /*----Misalliance---*/
+  /*----Miscellaneous---*/
   std::string toJSON() const;
   unsigned int size() const;
+  bool isFilterEmpty(const StringFilterSet * const filter) const;
+  bool filterContains(const StringFilterSet * const filter, std::string value);
 
-  /*---Override---*/
+    /*---Override---*/
   friend std::ostream& operator<<(std::ostream& os, const Areas& area);
 
 };

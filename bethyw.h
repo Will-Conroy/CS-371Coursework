@@ -63,7 +63,6 @@ unsigned int validateYear(std::string yearSting);
 
 bool insensitiveEquals(std::string const a, std::string const b);
 
-bool filterContains(const StringFilterSet * const filter, std::string value);
 
 std::string convertToLower(const std::string string);
 
