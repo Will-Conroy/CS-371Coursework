@@ -1,4 +1,4 @@
-# Beth Yw ? Stats Wales DataAnalysis Tool
+# Beth Yw ? Stats Wales Data Analysis Tool
 *🏴 󠁢󠁷󠁬󠁳󠁿C++ tool to read and filter Walsh data stored in JSON and CSV formats 🏴󠁧󠁢󠁷󠁬󠁳󠁿*
 ***
 ##🖊️ Authors
